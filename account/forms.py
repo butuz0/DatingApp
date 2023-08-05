@@ -9,7 +9,7 @@ class UserRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'username', 'email']
+        fields = ['username', 'email']
 
         def clean_password2(self):
             cd = self.cleaned_data
@@ -25,6 +25,14 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class ProfileRegistrationForm(forms.ModelForm):
+    first_name = forms.CharField(max_length=200)
+    last_name = forms.CharField(max_length=200)
+
     class Meta:
         model = Profile
         fields = ['gender', 'date_of_birth', 'preferences', 'photo']
+
+
+class LoginForm(forms.Form):
+    username = forms.CharField(max_length=30)
+    password = forms.CharField(widget=forms.PasswordInput)

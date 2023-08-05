@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    People
+{% endblock %}
+
+{% block content %}
+
+    <ul>
+        {% for person in people %}
+            <li>
+                <p>
+                    {{ person.user.first_name }} {{ person.user.last_name }}.<br>
+                    Is {{ person.gender }}, (likes {{ person.preferences }})
+                </p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}

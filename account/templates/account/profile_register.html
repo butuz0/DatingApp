@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	Add personal info
+{% endblock %}
+
+{% block content %}
+	<h1>Add personal info</h1>
+    <p>Please, add personal info using form below</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Done">
+    </form>
+{% endblock %}

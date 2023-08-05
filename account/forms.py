@@ -24,6 +24,7 @@ class UserRegistrationForm(forms.ModelForm):
             return user_email
 
 
-class ProfileRegistrationForm(forms.Form):
+class ProfileRegistrationForm(forms.ModelForm):
     class Meta:
         model = Profile
+        fields = ['gender', 'date_of_birth', 'preferences', 'photo']

@@ -15,8 +15,6 @@ def user_registration(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
-            login(request, new_user)
-            Profile.objects.create(user=new_user)
             return redirect(reverse('account:profile_register'))
     else:
         form = UserRegistrationForm()
@@ -31,15 +29,17 @@ def profile_registration(request):
             cd = form.cleaned_data
 
             user = request.user
+            login(request, user)
             user.first_name = cd['first_name']
             user.last_name = cd['last_name']
             user.save()
 
-            profile = Profile.objects.get(user=user)
-            profile.gender = cd['gender']
-            profile.date_of_birth = cd['date_of_birth']
-            profile.photo = cd['photo']
-            profile.preferences = cd['preferences']
+            profile = Profile.objects.create(user=new_user,
+                                             gender=cd['gender'],
+                                             date_of_birth=cd['date_of_birth'],
+                                             photo=cd['photo'],
+                                             preferences=cd['preferences'],
+                                             about_me=cd['about_me'])
             profile.save()
 
             return render(request, 'account/registration_done.html', {'profile': profile})

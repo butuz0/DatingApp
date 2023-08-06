@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.urls import reverse
 import datetime
 
 
@@ -19,3 +20,9 @@ class Profile(models.Model):
 
     def __str__(self):
         return f'Profile of {self.user.username}'
+
+    def get_absolute_url(self):
+        return reverse('people:user_detail', args=[self.user.username])
+
+    def years_old(self):
+        return datetime.date.today().year - self.date_of_birth.year

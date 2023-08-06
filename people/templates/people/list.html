@@ -5,15 +5,18 @@
 {% endblock %}
 
 {% block content %}
-
-    <ul>
-        {% for person in people %}
-            <li>
-                <p>
-                    {{ person.user.first_name }} {{ person.user.last_name }}.<br>
-                    Is {{ person.gender }}, (likes {{ person.preferences }})
-                </p>
-            </li>
-        {% endfor %}
-    </ul>
+    <div>
+        <ul>
+            {% for person in people %}
+                <li>
+                    <p>
+                        <a href="{% url 'people:user_detail' person.user.username %}">
+                            {{ person.user.first_name }} {{ person.user.last_name }}.
+                        </a><br>
+                        Is {{ person.gender }}, (likes {{ person.preferences }})
+                    </p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endblock %}

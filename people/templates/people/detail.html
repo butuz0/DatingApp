@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{ user.username }} Profile
+{% endblock %}
+
+{% block content %}
+    <img src="{% if product.image %}{{ product.image.url }}
+              {% else %}{% static 'img/no_image.png' %}{% endif %}"
+         alt="">
+    <h1>{{ user.first_name }} {{ user.last_name }}</h1>
+    <p>{{ user.profile.gender }}, {{ user.profile.years_old }} years old</p>
+    
+    <p>{{ user.profile.about_me }}</p>
+{% endblock %}

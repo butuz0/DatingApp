@@ -6,11 +6,12 @@
 {% endblock %}
 
 {% block content %}
-    <img src="{% if product.image %}{{ product.image.url }}
-              {% else %}{% static 'img/no_image.png' %}{% endif %}"
-         alt="">
+    {% if user.profile.photo %}
+        <img src="{{ user.profile.photo.url }}" alt="">
+    {% else %}
+        <img src="{% static 'img/no_image.png' %}" alt="">
+    {% endif %}
     <h1>{{ user.first_name }} {{ user.last_name }}</h1>
     <p>{{ user.profile.gender }}, {{ user.profile.years_old }} years old</p>
-    
     <p>{{ user.profile.about_me }}</p>
 {% endblock %}

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     People
@@ -8,13 +9,24 @@
     <div>
         <ul>
             {% for person in people %}
-                <li>
-                    <p>
+                <li style="display: flex; flex-direction: row">
+                    <div style="padding-right: 3rem">
                         <a href="{% url 'people:user_detail' person.user.username %}">
-                            {{ person.user.first_name }} {{ person.user.last_name }}.
-                        </a><br>
-                        Is {{ person.gender }}, (likes {{ person.preferences }})
-                    </p>
+                            {% if person.photo %}
+                                <img src="{{ person.photo.url }}" alt="">
+                            {% else %}
+                                <img src="{% static 'img/no_image.png' %}" alt="">
+                            {% endif %}
+                        </a>
+                    </div>
+                    <div>
+                        <p>
+                            <a href="{% url 'people:user_detail' person.user.username %}">
+                                {{ person.user.first_name }} {{ person.user.last_name }}.
+                            </a><br>
+                            Is {{ person.gender }}, (likes {{ person.preferences }})
+                        </p>
+                    </div>
                 </li>
             {% endfor %}
         </ul>

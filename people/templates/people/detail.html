@@ -14,4 +14,49 @@
     <h1>{{ user.first_name }} {{ user.last_name }}</h1>
     <p>{{ user.profile.gender }}, {{ user.profile.years_old }} years old</p>
     <p>{{ user.profile.about_me }}</p>
+    
+    {% if user != request.user %}
+        <a href="#"
+           data-id="{{ user.id }}"
+           data-action="{% if request.user in user.liked_by.all %}un{% endif %}like"
+           class="like">
+            {% if request.user not in user.liked_by.all %}
+                Like
+            {% else %}
+                Unlike
+            {% endif %}
+        </a>
+    {% endif %}
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const url = "{% url 'people:like_user' %}";
+        let options = {
+            method: "POST",
+            headers: {'X-CSRFToken': csrftoken},
+            mode: "same-origin"
+        }
+
+        document.querySelector("a.like").addEventListener("click", function (e) {
+            e.preventDefault();
+            let likeButton = this;
+
+            let formData = new FormData();
+            formData.append("id", likeButton.dataset.id);
+            formData.append("action", likeButton.dataset.action);
+            options["body"] = formData;
+
+            fetch(url, options)
+                .then(response => response.json())
+                .then(data => {
+                    if (data["status"] === "ok") {
+                        let previousAction = likeButton.dataset.action;
+                        let action = previousAction === "Like" ? "Unlike" : "Like";
+                        likeButton.dataset.action = action;
+                        likeButton.innerHTML = action;
+                    }
+                });
+        });
+    {% endblock %}
+</script>

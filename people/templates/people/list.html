@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}
     People
 {% endblock %}
 
-{% block content %}
+{% block content %}`
     <div>
         <ul>
             {% for person in people %}
@@ -13,7 +14,7 @@
                     <div style="padding-right: 3rem">
                         <a href="{% url 'people:user_detail' person.user.username %}">
                             {% if person.photo %}
-                                <img src="{{ person.photo.url }}" alt="">
+                                <img src="{% thumbnail person.photo '180x180' crop='smart' %}" alt="">
                             {% else %}
                                 <img src="{% static 'img/no_image.png' %}" alt="">
                             {% endif %}

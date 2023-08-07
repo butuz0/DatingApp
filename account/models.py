@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.urls import reverse
+from django.contrib.auth import get_user_model
 import datetime
 
 
@@ -26,3 +27,22 @@ class Profile(models.Model):
 
     def years_old(self):
         return datetime.date.today().year - self.date_of_birth.year
+
+
+class Like(models.Model):
+    user_from = models.ForeignKey('auth.User', related_name='like_user_from', on_delete=models.CASCADE)
+    user_to = models.ForeignKey('auth.User', related_name='like_user_to', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+        ordering = ['-created']
+
+
+user_model = get_user_model()
+user_model.add_to_class('likes', models.ManyToManyField('self',
+                                                        through=Like,
+                                                        related_name='liked_by',
+                                                        symmetrical=False))

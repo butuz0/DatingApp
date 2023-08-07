@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from account.models import Profile
+from account.models import Profile, Like
 
 
 # Create your views here.
@@ -20,3 +22,23 @@ def list_people(request):
 def user_detail(request, username):
     user = get_object_or_404(User, username=username)
     return render(request, 'people/detail.html', {'user': user})
+
+
+@login_required
+@require_POST
+def like_user(request):
+    user_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if user_id and action:
+        try:
+            user = User.objects.get(id=user_id)
+            if action == 'like':
+                Like.objects.get_or_create(user_from=request.user, user_to=user)
+            else:
+                Like.objects.filter(user_from=request.user, user_to=user).delete()
+            return JsonResponse({'status': 'ok'})
+
+        except User.DoesNotExist:
+            return JsonResponse({'status': 'error'})
+
+    return JsonResponse({'status': 'error'})

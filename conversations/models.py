@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 
 # Create your models here.
@@ -16,7 +17,7 @@ class Conversation(models.Model):
         ordering = ['-updated']
 
     def __iter__(self):
-        messages = self.messages.objects.all()
+        messages = self.messages.all()
         for message in messages:
             yield message
 

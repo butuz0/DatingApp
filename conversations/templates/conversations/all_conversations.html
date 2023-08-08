@@ -9,7 +9,7 @@
     {% for conversation in conversations %}
         <a href="{% url 'conversations:conversation_detail' conversation.id %}">
             <div>
-                {% for user in conversation.users %}
+                {% for user in conversation.users.all %}
                     {% if user != request.user %}
                         <p>{{ user.first_name }} {{ user.last_name }} | {{ conversation.updated }}</p>
                         <p>{{ conversation.messages.0.message_text|truncatechars_html:40 }}</p>

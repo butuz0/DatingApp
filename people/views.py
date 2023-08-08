@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 from account.models import Profile, Like
 
 
@@ -42,3 +43,9 @@ def like_user(request):
             return JsonResponse({'status': 'error'})
 
     return JsonResponse({'status': 'error'})
+
+
+@login_required
+def user_activity(request):
+    likes_list = Like.objects.filter(Q(user_from=request.user) | Q(user_to=request.user))
+    return render(request, 'people/user_activity.html', {'likes_list': likes_list})

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load thumbnail %}
+
+{% block title %}
+    Your activity
+{% endblock %}
+
+{% block content %}
+    <h1>Your activity</h1>
+    {% if likes_list %}
+        {% for like in likes_list %}
+            <div>
+                <p>
+                    {% if like.user_from == request.user %}
+                        You liked
+                        <a href="{{ like.user_to.profile.get_absolute_url }}">
+                            {{ like.user_to.first_name }} {{ like.user_to.first_name }}
+                        </a>
+                        at {{ like.created }}
+                    {% else %}
+                        <a href="{{ like.user_from.profile.get_absolute_url }}">
+                            {{ like.user_from.first_name }} {{ like.user_from.first_name }}
+                        </a>
+                        liked you at {{ like.created }}
+                    {% endif %}
+                </p>
+            </div>
+        {% endfor %}
+    {% else %}
+        You did not have any activity recently
+    {% endif %}
+{% endblock %}

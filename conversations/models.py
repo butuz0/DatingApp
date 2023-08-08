@@ -15,6 +15,11 @@ class Conversation(models.Model):
         ]
         ordering = ['-updated']
 
+    def __iter__(self):
+        messages = self.messages.objects.all()
+        for message in messages:
+            yield message
+
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, related_name='messages', on_delete=models.CASCADE)

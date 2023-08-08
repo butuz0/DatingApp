@@ -21,9 +21,9 @@
            data-action="{% if request.user in user.liked_by.all %}un{% endif %}like"
            class="like">
             {% if request.user not in user.liked_by.all %}
-                Like
+                like
             {% else %}
-                Unlike
+                unlike
             {% endif %}
         </a>
     {% endif %}
@@ -52,7 +52,7 @@
                 .then(data => {
                     if (data["status"] === "ok") {
                         let previousAction = likeButton.dataset.action;
-                        let action = previousAction === "Like" ? "Unlike" : "Like";
+                        let action = previousAction === "like" ? "unlike" : "like";
                         likeButton.dataset.action = action;
                         likeButton.innerHTML = action;
                     }

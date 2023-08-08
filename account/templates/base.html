@@ -12,20 +12,12 @@
 <body>
     <div id="header">
         {% if request.user.is_authenticated %}
-            <ul class="menu">
-                <li>
-                    <a href="{% url 'people:list_people' %}">People</a>
-                </li>
-                <li>
-                    <a href="#">Messages</a>
-                </li>
-                <li>
-                    <a href="#">Activity</a>
-                </li>
-                <li>
-                    <a href="{% url 'people:user_detail' request.user.username %}">My page</a>
-                </li>
-            </ul>
+            <nav>
+                <a href="{% url 'people:list_people' %}">People</a>
+                <a href="#">Messages</a>
+                <a href="#">Activity</a>
+                <a href="{% url 'people:user_detail' request.user.username %}">My page</a>
+            </nav>
         {% endif %}
     </div>
     <div id="content">

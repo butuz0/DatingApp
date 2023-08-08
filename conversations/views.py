@@ -10,7 +10,7 @@ from .forms import CreateMessageForm
 @login_required
 def all_conversations(request):
     conversations = Conversation.objects.filter(users__in=[request.user.id])
-    return render(request, 'conversation/all_conversations.html', context={'conversations': conversations})
+    return render(request, 'conversations/all_conversations.html', context={'conversations': conversations})
 
 
 @login_required
@@ -25,4 +25,8 @@ def conversation_detail(request, conversation_id):
         message_form.created_by = request.user
         return redirect('conversation:conversation_detail', id=conversation_id)
 
-    return render(request, 'conversations/detail.html', {'conversation': conversation})
+    else:
+        message_form = CreateMessageForm()
+
+    return render(request, 'conversations/detail.html', {'conversation': conversation,
+                                                         'message_form': message_form})

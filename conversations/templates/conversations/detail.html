@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Conversation
+{% endblock %}
+
+{% block content %}
+    {% for message in conversation %}
+        <div class="message {% if message.created_by == request.user %}sent{% else %}recieved{% endif %}">
+            <p>
+                <strong>{{ message.created_by.username }}</strong> @ {{ message.created_at }}
+            </p>
+            <p>{{ message.message_text }}</p>
+        </div>
+    {% endfor %}
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ message_form.as_p }}
+        <input type="submit" value="Send">
+    </form>
+{% endblock %}

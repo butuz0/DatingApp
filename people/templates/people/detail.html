@@ -25,7 +25,8 @@
             {% else %}
                 unlike
             {% endif %}
-        </a>
+        </a><br>
+        <a href="{% url 'conversations:conversation_detail' user.id %}">Contact Me!</a>
     {% endif %}
 {% endblock %}
 

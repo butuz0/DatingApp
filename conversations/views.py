@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
-from .models import Conversation
+from django.db.models import Q
+from .models import Conversation, Message
 from .forms import CreateMessageForm
 
 
@@ -14,16 +15,23 @@ def all_conversations(request):
 
 
 @login_required
-def conversation_detail(request, conversation_id):
-    conversation = get_object_or_404(Conversation.objects
-                                     .filter(users__in=[request.user.id])
-                                     .get(id=conversation_id))
+def conversation_detail(request, user_id):
+    try:
+        conversation = Conversation.objects.filter(users__in=str(request.user.id)).filter(users__in=user_id).get()
+        print(conversation)
+    except Conversation.DoesNotExist:
+        print('conversation does not exist')
+        conversation = Conversation.objects.create()
+        conversation.users.add(str(request.user.id), user_id)
 
-    if request_method == 'POST':
+    if request.method == 'POST':
         message_form = CreateMessageForm(request.POST)
-        message_form.conversation = conversation
-        message_form.created_by = request.user
-        return redirect('conversation:conversation_detail', id=conversation_id)
+        if message_form.is_valid():
+            message = message_form.save(commit=False)
+            message.conversation = conversation
+            message.created_by = request.user
+            message.save()
+        return redirect('conversations:conversation_detail', user_id=user_id)
 
     else:
         message_form = CreateMessageForm()

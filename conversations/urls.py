@@ -5,5 +5,5 @@ app_name = 'conversations'
 
 urlpatterns = [
     path('', views.all_conversations, name='all_conversations'),
-    path('<conversation_id>/', views.conversation_detail, name='conversation_detail'),
+    path('<user_id>/', views.conversation_detail, name='conversation_detail'),
 ]

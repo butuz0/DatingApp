@@ -40,6 +40,10 @@ class Like(models.Model):
         ]
         ordering = ['-created']
 
+    # check if two users like each other
+    def match(self):
+        return Like.objects.filter(user_to=self.user_from, user_from=self.user_to).exists()
+
 
 user_model = get_user_model()
 user_model.add_to_class('likes', models.ManyToManyField('self',

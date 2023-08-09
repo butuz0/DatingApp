@@ -19,6 +19,9 @@
                 <a href="{% url 'people:user_detail' request.user.username %}">My page</a>
             </nav>
         {% endif %}
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
     </div>
     <div id="content">
         {% block content %}

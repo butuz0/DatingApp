@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
+from django.contrib import messages
 from account.models import Profile, Like
 
 
@@ -34,7 +34,11 @@ def like_user(request):
         try:
             user = User.objects.get(id=user_id)
             if action == 'like':
-                Like.objects.get_or_create(user_from=request.user, user_to=user)
+                like = Like.objects.get_or_create(user_from=request.user, user_to=user)[0]
+                print(like)
+                if like.match():
+                    messages.success(request, 'Its a match!')
+
             else:
                 Like.objects.filter(user_from=request.user, user_to=user).delete()
             return JsonResponse({'status': 'ok'})

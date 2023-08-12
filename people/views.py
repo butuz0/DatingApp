@@ -37,7 +37,12 @@ def list_people(request):
         current_user.longitude = user_location['longitude']
         current_user.save()
 
-    people = UserInfo.objects.filter(preferences__in=['BOTH', current_user.gender]).exclude(user=current_user.user.id)
+    # filter people by preferences and geolocation
+    people = (UserInfo.objects.filter(preferences__in=['BOTH', current_user.gender])
+              .filter(Q(latitude__lte=current_user.latitude + 0.6) & Q(latitude__gte=current_user.latitude - 0.6))
+              .filter(Q(longitude__lte=current_user.latitude + 0.6) & Q(longitude__gte=current_user.latitude - 0.6))
+              .exclude(user=current_user.user.id))
+
     if current_user.preferences != 'BOTH':
         people = people.exclude(gender=current_user.gender)
 

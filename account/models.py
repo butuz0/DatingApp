@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
 
 
@@ -18,6 +19,8 @@ class UserInfo(models.Model):
     pref_choice = Gender.choices + [('BOTH', 'Male and Female')]
     preferences = models.CharField(max_length=4, choices=pref_choice, null=True)
     about_me = models.TextField(null=True)
+    latitude = models.FloatField(validators=[MaxValueValidator(90), MinValueValidator(-90)], null=True)
+    longitude = models.FloatField(validators=[MaxValueValidator(180), MinValueValidator(-180)], null=True)
 
     def __str__(self):
         return f'Profile of {self.user.username}'

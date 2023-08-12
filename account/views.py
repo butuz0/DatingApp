@@ -24,7 +24,7 @@ def user_registration(request):
 @login_required
 def profile_registration(request):
     if request.method == 'POST':
-        form = ProfileRegistrationForm(request.POST)
+        form = ProfileRegistrationForm(request.POST, request.FILES)
         if form.is_valid():
             cd = form.cleaned_data
 
@@ -34,7 +34,7 @@ def profile_registration(request):
             user.last_name = cd['last_name']
             user.save()
 
-            profile = UserInfo.objects.create(user=new_user,
+            profile = UserInfo.objects.create(user=user,
                                               gender=cd['gender'],
                                               date_of_birth=cd['date_of_birth'],
                                               photo=cd['photo'],

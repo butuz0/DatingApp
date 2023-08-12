@@ -30,7 +30,7 @@ class ProfileRegistrationForm(forms.ModelForm):
 
     class Meta:
         model = UserInfo
-        fields = ['gender', 'date_of_birth', 'preferences', 'photo']
+        fields = ['gender', 'date_of_birth', 'preferences', 'photo', 'about_me']
 
 
 class LoginForm(forms.Form):

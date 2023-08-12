@@ -131,7 +131,7 @@ LOGIN_URL = 'account:login'
 LOGOUT_URL = 'account:logout'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_AGE = 60
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 3  # 3 days
 
 USER_REGION_SESSION_ID = 'user_region'
 

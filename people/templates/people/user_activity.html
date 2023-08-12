@@ -14,12 +14,12 @@
                 <p>
                     {% if like.user_from == request.user %}
                         You liked
-                        <a href="{{ like.user_to.profile.get_absolute_url }}">
+                        <a href="{{ like.user_to.user_info.get_absolute_url }}">
                             {{ like.user_to.first_name }} {{ like.user_to.first_name }}
                         </a>
                         at {{ like.created }}
                     {% else %}
-                        <a href="{{ like.user_from.profile.get_absolute_url }}">
+                        <a href="{{ like.user_from.user_info.get_absolute_url }}">
                             {{ like.user_from.first_name }} {{ like.user_from.first_name }}
                         </a>
                         liked you at {{ like.created }}

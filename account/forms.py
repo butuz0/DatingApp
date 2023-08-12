@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import UserInfo
 
 
 class UserRegistrationForm(forms.ModelForm):
@@ -29,7 +29,7 @@ class ProfileRegistrationForm(forms.ModelForm):
     last_name = forms.CharField(max_length=200)
 
     class Meta:
-        model = Profile
+        model = UserInfo
         fields = ['gender', 'date_of_birth', 'preferences', 'photo']
 
 

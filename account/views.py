@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from .forms import UserRegistrationForm, ProfileRegistrationForm, LoginForm
-from .models import Profile
+from .models import UserInfo
 
 
 # Create your views here.
@@ -34,12 +34,12 @@ def profile_registration(request):
             user.last_name = cd['last_name']
             user.save()
 
-            profile = Profile.objects.create(user=new_user,
-                                             gender=cd['gender'],
-                                             date_of_birth=cd['date_of_birth'],
-                                             photo=cd['photo'],
-                                             preferences=cd['preferences'],
-                                             about_me=cd['about_me'])
+            profile = UserInfo.objects.create(user=new_user,
+                                              gender=cd['gender'],
+                                              date_of_birth=cd['date_of_birth'],
+                                              photo=cd['photo'],
+                                              preferences=cd['preferences'],
+                                              about_me=cd['about_me'])
             profile.save()
 
             return render(request, 'account/registration_done.html', {'profile': profile})

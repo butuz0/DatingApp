@@ -6,12 +6,12 @@ import datetime
 
 
 # Create your models here.
-class Profile(models.Model):
+class UserInfo(models.Model):
     class Gender(models.TextChoices):
         MALE = 'M', 'Male',
         FEMALE = 'F', 'Female'
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='profile', on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='user_info', on_delete=models.CASCADE)
     gender = models.CharField(max_length=2, choices=Gender.choices, null=True)
     date_of_birth = models.DateField(null=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', null=True)

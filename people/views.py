@@ -5,14 +5,13 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
-from account.models import Profile, Like
 
 
 # Create your views here.
 @login_required
 def list_people(request):
-    current_user = request.user.profile
-    people = Profile.objects.filter(preferences__in=['BOTH', current_user.gender])
+    current_user = request.user.user_info
+    people = UserInfo.objects.filter(preferences__in=['BOTH', current_user.gender])
     if current_user.preferences != 'BOTH':
         people = people.exclude(gender=current_user.gender)
     return render(request, 'people/list.html', {'current_user': current_user,

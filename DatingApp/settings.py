@@ -129,3 +129,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_REDIRECT_URL = 'people:list_people'
 LOGIN_URL = 'account:login'
 LOGOUT_URL = 'account:logout'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 60
+
+USER_REGION_SESSION_ID = 'user_region'
+
+ABSTRACT_API_KEY = '312b6263e7254d40b6b41bc89eb16e58'

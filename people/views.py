@@ -40,7 +40,7 @@ def list_people(request):
     # filter people by preferences and geolocation
     people = (UserInfo.objects.filter(preferences__in=['BOTH', current_user.gender])
               .filter(Q(latitude__lte=current_user.latitude + 0.6) & Q(latitude__gte=current_user.latitude - 0.6))
-              .filter(Q(longitude__lte=current_user.latitude + 0.6) & Q(longitude__gte=current_user.latitude - 0.6))
+              .filter(Q(longitude__lte=current_user.longitude + 0.6) & Q(longitude__gte=current_user.longitude - 0.6))
               .exclude(user=current_user.user.id))
 
     if current_user.preferences != 'BOTH':

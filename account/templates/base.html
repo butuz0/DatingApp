@@ -14,7 +14,7 @@
         {% if request.user.is_authenticated %}
             <nav>
                 <a href="{% url 'people:list_people' %}">People</a>
-                <a href="#">Messages</a>
+                <a href="{% url 'conversations:all_conversations' %}">Messages</a>
                 <a href="{% url 'people:user_activity' %}">Activity</a>
                 <a href="{% url 'people:user_detail' request.user.username %}">My page</a>
             </nav>

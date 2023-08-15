@@ -17,12 +17,13 @@ def all_conversations(request):
 @login_required
 def conversation_detail(request, user_id):
     try:
-        conversation = Conversation.objects.filter(users__in=str(request.user.id)).filter(users__in=user_id).get()
-        print(conversation)
+        conversation = Conversation.objects.filter(users__in=[str(request.user.id)]).filter(users__in=[user_id]).get()
     except Conversation.DoesNotExist:
         print('conversation does not exist')
         conversation = Conversation.objects.create()
-        conversation.users.add(str(request.user.id), user_id)
+        conversation.users.add(str(request.user.id))
+        conversation.users.add(user_id)
+        conversation.save()
 
     if request.method == 'POST':
         message_form = CreateMessageForm(request.POST)

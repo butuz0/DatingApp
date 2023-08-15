@@ -19,7 +19,6 @@ def conversation_detail(request, user_id):
     try:
         conversation = Conversation.objects.filter(users__in=[str(request.user.id)]).filter(users__in=[user_id]).get()
     except Conversation.DoesNotExist:
-        print('conversation does not exist')
         conversation = Conversation.objects.create()
         conversation.users.add(str(request.user.id))
         conversation.users.add(user_id)

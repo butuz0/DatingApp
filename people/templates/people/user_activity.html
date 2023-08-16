@@ -15,7 +15,7 @@
                     {% if like.user_from == request.user %}
                         You liked
                         <a href="{{ like.user_to.user_info.get_absolute_url }}">
-                            {{ like.user_to.first_name }} {{ like.user_to.first_name }}
+                            {{ like.user_to.first_name }} {{ like.user_to.last_name }}
                         </a>
                         at {{ like.created }}
                     {% else %}

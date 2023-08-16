@@ -26,6 +26,7 @@ class Message(models.Model):
     conversation = models.ForeignKey(Conversation, related_name='messages', on_delete=models.CASCADE)
     created_by = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     message_text = models.TextField()
+    message_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

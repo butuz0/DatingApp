@@ -35,6 +35,9 @@ def conversation_detail(request, user_id):
 
     else:
         message_form = CreateMessageForm()
+        # set all unread messages sent by other user as read
+        Message.objects.filter(conversation=conversation, created_by=user_id,
+                               message_read=False).update(message_read=True)
 
     return render(request, 'conversations/detail.html', {'conversation': conversation,
                                                          'message_form': message_form})

@@ -24,9 +24,7 @@
                 </div>
             </div>
             <div>
-                {% with conversation.messages.all|last_index as last_message %}
-                    <p>{{ last_message.created_by }}: {{ last_message }}</p>
-                {% endwith %}
+                <p>{{ conversation.messages.all.last }}</p>
             </div>
         </div>
     {% endfor %}

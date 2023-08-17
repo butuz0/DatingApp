@@ -34,3 +34,6 @@ class Message(models.Model):
             models.Index(fields=['created_at']),
         ]
         ordering = ['created_at']
+
+    def __str__(self):
+        return self.message_text

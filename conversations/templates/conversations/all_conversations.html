@@ -8,21 +8,26 @@
 {% block content %}
     <h1>Your conversations</h1>
     {% for conversation in conversations %}
-        <div style="display: flex;">
-            <div>
-                {% for user in conversation.users.all %}
-                    {% if user != request.user %}
-                        <a href="{% url 'conversations:conversation_detail' user.id %}">
-                            <p>{{ user.first_name }} {{ user.last_name }} | {{ conversation.updated }}</p>
-                        </a>
-                    {% endif %}
-                {% endfor %}
+        <div>
+            <div style="display: flex;">
+                <div>
+                    {% for user in conversation.users.all %}
+                        {% if user != request.user %}
+                            <a href="{% url 'conversations:conversation_detail' user.id %}">
+                                <p>{{ user.first_name }} {{ user.last_name }} | {{ conversation.updated }}</p>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div>
+                    <p>You have {{ unread_messages_counts|index:forloop.counter0 }} unread messages</p>
+                </div>
             </div>
             <div>
-                <p>You have {{ unread_messages_counts|index:forloop.counter0 }} unread messages</p>
+                {% with conversation.messages.all|last_index as last_message %}
+                    <p>{{ last_message.created_by }}: {{ last_message }}</p>
+                {% endwith %}
             </div>
         </div>
-
-
     {% endfor %}
 {% endblock %}

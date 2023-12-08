@@ -44,7 +44,6 @@ def like_user(request):
             user = User.objects.get(id=user_id)
             if action == 'like':
                 like = Like.objects.get_or_create(user_from=request.user, user_to=user)[0]
-                print(like)
                 if like.match():
                     messages.success(request, 'Its a match!')
 

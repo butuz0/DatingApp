@@ -14,7 +14,7 @@
     <h1>{{ user.first_name }} {{ user.last_name }}</h1>
     <p>{{ user.user_info.gender }}, {{ user.user_info.years_old }} years old</p>
     <p>{{ user.user_info.about_me }}</p>
-
+    
     {% if user != request.user %}
         <a href="#"
            data-id="{{ user.id }}"
@@ -29,7 +29,10 @@
         {% if request.user in user.liked_by.all %}
             <a href="{% url 'conversations:conversation_detail' user.id %}">Contact Me!</a>
         {% endif %}
+    {% else %}
+        <a href="{% url 'people:create_post' user.username %}">New Post</a>
     {% endif %}
+    {% for %}
 {% endblock %}
 
 <script>

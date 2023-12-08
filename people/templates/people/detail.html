@@ -32,7 +32,15 @@
     {% else %}
         <a href="{% url 'people:create_post' user.username %}">New Post</a>
     {% endif %}
-    {% for %}
+
+    {% for post in posts %}
+        <div>
+            {% if post.image %}
+                <img src="{{ post.image.url }}" alt="">
+            {% endif %}
+            <p>{{ post.text }}</p>
+        </div>
+    {% endfor %}
 {% endblock %}
 
 <script>

@@ -31,7 +31,9 @@ def list_people(request):
 @login_required
 def user_detail(request, username):
     user = get_object_or_404(User, username=username)
-    return render(request, 'people/detail.html', {'user': user})
+    posts = user.blog_posts.all()
+    return render(request, 'people/detail.html', {'user': user,
+                                                  'posts': posts})
 
 
 @login_required

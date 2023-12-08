@@ -13,35 +13,13 @@ import requests
 import json
 
 
-def session_expired(request):
-    region = request.session.get(settings.USER_REGION_SESSION_ID)
-    if not region:
-        return True
-    return False
-
-
-def get_user_location():
-    key = settings.ABSTRACT_API_KEY
-    response = requests.get(f'https://ipgeolocation.abstractapi.com/v1/?api_key={key}')
-    return json.loads(response.content.decode())  # user geolocation, decoded from bytes to dictionary
-
-
 # Create your views here.
 @login_required
 def list_people(request):
     current_user = request.user.user_info
-    if session_expired(request):
-        user_location = get_user_location()
-        request.session[settings.USER_REGION_SESSION_ID] = f'{user_location["country"]} {user_location["region"]}'
-        current_user.latitude = user_location['latitude']
-        current_user.longitude = user_location['longitude']
-        current_user.save()
 
-    # filter people by preferences and geolocation
-    people = (UserInfo.objects.filter(preferences__in=['BOTH', current_user.gender])
-              .filter(Q(latitude__lte=current_user.latitude + 0.6) & Q(latitude__gte=current_user.latitude - 0.6))
-              .filter(Q(longitude__lte=current_user.longitude + 0.6) & Q(longitude__gte=current_user.longitude - 0.6))
-              .exclude(user=current_user.user.id))
+    # filter people by preferences
+    people = (UserInfo.objects.filter(preferences__in=['BOTH', current_user.gender]).exclude(user=current_user.user.id))
 
     if current_user.preferences != 'BOTH':
         people = people.exclude(gender=current_user.gender)

@@ -6,21 +6,43 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
 
 
+class GroupOfInterests(models.Model):
+    name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.name
+
+
+class Interest(models.Model):
+    name = models.CharField(max_length=50)
+    group = models.ForeignKey(GroupOfInterests, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
+
+
 # Create your models here.
-class UserInfo(models.Model):
+class UserProfile(models.Model):
     class Gender(models.TextChoices):
         MALE = 'M', 'Male',
         FEMALE = 'F', 'Female'
+
+    pref_choice = Gender.choices + [('BOTH', 'Male and Female')]
+
+    class Relationship(models.TextChoices):
+        SHORT = 'short', 'Short Relationship',
+        LOVE = 'love', 'True Love',
+        FRIEND = 'friend', 'Friendship',
+        FUN = 'fun', 'Having Fun'
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='user_info', on_delete=models.CASCADE)
     gender = models.CharField(max_length=2, choices=Gender.choices, null=True)
     date_of_birth = models.DateField(null=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', null=True)
-    pref_choice = Gender.choices + [('BOTH', 'Male and Female')]
-    preferences = models.CharField(max_length=4, choices=pref_choice, null=True)
+    gender_preference = models.CharField(max_length=4, choices=pref_choice, null=True)
     about_me = models.TextField(null=True)
-    latitude = models.FloatField(validators=[MaxValueValidator(90), MinValueValidator(-90)], null=True)
-    longitude = models.FloatField(validators=[MaxValueValidator(180), MinValueValidator(-180)], null=True)
+    relationship = models.CharField(max_length=6, choices=Relationship.choices, null=True)
+    interests = models.ManyToManyField(Interest)
 
     def __str__(self):
         return f'Profile of {self.user.username}'

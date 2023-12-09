@@ -25,8 +25,12 @@
                             <a href="{% url 'people:user_detail' person.user.username %}">
                                 {{ person.user.first_name }} {{ person.user.last_name }}.
                             </a><br>
-                            Is {{ person.gender }}, (likes {{ person.preferences }})
+                            Is {{ person.gender }}, (likes {{ person.gender_preference }})<br>
+                            Looking for: {{ person.relationship }}<br>
                         </p>
+                        {% for interest in person.interests.all %}
+                            {{ interest }};
+                        {% endfor %}
                     </div>
                 </li>
             {% endfor %}

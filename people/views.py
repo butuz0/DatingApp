@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
 from django.conf import settings
-from account.models import UserInfo, Like
+from account.models import UserProfile, Like
 import datetime
 import requests
 import json
@@ -19,9 +19,10 @@ def list_people(request):
     current_user = request.user.user_info
 
     # filter people by preferences
-    people = (UserInfo.objects.filter(preferences__in=['BOTH', current_user.gender]).exclude(user=current_user.user.id))
+    people = (UserProfile.objects.filter(gender_preference__in=['BOTH', current_user.gender])
+              .exclude(user=current_user.user.id))
 
-    if current_user.preferences != 'BOTH':
+    if current_user.gender_preference != 'BOTH':
         people = people.exclude(gender=current_user.gender)
 
     return render(request, 'people/list.html', {'current_user': current_user,

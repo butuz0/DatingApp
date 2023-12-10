@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from .forms import UserRegistrationForm, ProfileRegistrationForm, LoginForm
+from .forms import UserRegistrationForm, ProfileRegistrationForm, LoginForm, RelationshipForm, InterestsForm
 from .models import UserProfile
 
 
@@ -46,3 +46,27 @@ def profile_registration(request):
     else:
         form = ProfileRegistrationForm()
     return render(request, 'account/profile_register.html', {'form': form})
+
+
+@login_required
+def relationship_type_form(request):
+    if request.method == 'POST':
+        form = RelationshipForm(request.POST, instance=UserProfile.objects.get(user=request.user))
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('account:interests_form'))
+    else:
+        form = RelationshipForm()
+    return render(request, 'account/relationship_form.html', {'form': form})
+
+
+@login_required
+def interests_form(request):
+    if request.method == 'POST':
+        form = InterestsForm(request.POST, instance=UserProfile.objects.get(user=request.user))
+        if form.is_valid():
+            form.save()
+            return render(request, 'account/registration_done.html')
+    else:
+        form = InterestsForm()
+    return render(request, 'account/interests_form.html', {'form': form})

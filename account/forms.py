@@ -36,3 +36,15 @@ class ProfileRegistrationForm(forms.ModelForm):
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=30)
     password = forms.CharField(widget=forms.PasswordInput)
+
+
+class RelationshipForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['relationship']
+
+
+class InterestsForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['interests']

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Choose your Relationship
+{% endblock %}
+
+{% block content %}
+    <p>Please choose the type of relationship you are looking for</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Continue">
+    </form>
+{% endblock %}

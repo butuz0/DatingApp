@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Choose your Interests
+{% endblock %}
+
+{% block content %}
+    <p>Please pick from 5 to 10 of your interests</p>
+    <form action="" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="Continue">
+    </form>
+{% endblock %}

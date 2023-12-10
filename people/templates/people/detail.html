@@ -13,6 +13,14 @@
     {% endif %}
     <h1>{{ user.first_name }} {{ user.last_name }}</h1>
     <p>{{ user.user_info.gender }}, {{ user.user_info.years_old }} years old</p>
+    <p>Looking for: {{ user.user_info.relationship }}</p>
+    <p>
+        Interests:<br>
+        {% for interest in user.user_info.interests.all %}
+            {{ interest }};
+        {% endfor %}
+
+    </p>
     <p>{{ user.user_info.about_me }}</p>
     
     {% if user != request.user %}

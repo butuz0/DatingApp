@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.conf import settings
 from account.models import UserProfile, Like
-import datetime
+from datetime import datetime
 import requests
 import json
 
@@ -79,8 +79,21 @@ def find_best_match(request):
         exact same interest = 10 points
         interests from same categories = 5 points
     """
+    date_format = '%d/%m/%y %H:%M:%S'
+
+    # check if user already used FindMe function during last 24 hours
+    if 'best_score_user_id' in request.session:
+        last_time_used = datetime.strptime(request.session['last_time_used'], date_format)
+        time_passed = datetime.now() - last_time_used
+
+        # if less then 24 hours have passed since last time, show previously found person
+        if time_passed.total_seconds() < 60 * 60 * 24:
+            best_match = UserProfile.objects.get(user_id=request.session['best_score_user_id'])
+            return render(request, 'people/best_match.html', {'best_match': best_match})
+
     current_user = request.user.user_info
 
+    # evaluation function
     def get_score(person):
         score = 0
 
@@ -103,15 +116,24 @@ def find_best_match(request):
 
         return score
 
+    # get all profiles
     people = (UserProfile.objects.filter(gender_preference__in=[current_user.gender, 'BOTH'])
               .filter(relationship=current_user.relationship)
               .exclude(user=request.user))
     if current_user.gender_preference != 'BOTH':
         people = people.exclude(gender=current_user.gender)
 
+    # score evaluation for every person, sort by score value from highest
     people_scores = {person.user.id: get_score(person) for person in people}
     people_sorted = [person for person, score in sorted(people_scores.items(), key=lambda x: x[1], reverse=True)]
 
-    best_match = UserProfile.objects.get(user_id=people_sorted[0])
+    # save user id with best score and FindMe function time of usage in Cookies
+    best_score_user_id = people_sorted[0]
+    request.session['best_score_user_id'] = best_score_user_id
+
+    current_time = datetime.now().strftime(date_format)
+    request.session['last_time_used'] = str(current_time)
+
+    best_match = UserProfile.objects.get(user_id=best_score_user_id)
 
     return render(request, 'people/best_match.html', {'best_match': best_match})

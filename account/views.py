@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from .forms import UserRegistrationForm, ProfileRegistrationForm, LoginForm, RelationshipForm, InterestsForm
+from .forms import UserRegistrationForm, ProfileRegistrationForm, LoginForm, RelationshipForm, InterestsForm, \
+    UserSettingsForm, ProfileSettingsForm
 from .models import UserProfile
 
 
@@ -70,3 +72,33 @@ def interests_form(request):
     else:
         form = InterestsForm()
     return render(request, 'account/interests_form.html', {'form': form})
+
+
+@login_required
+def user_settings(request):
+    user_form = UserSettingsForm(instance=request.user)
+    profile_form = ProfileSettingsForm(instance=request.user.user_info)
+
+    if request.method == 'POST':
+        user_form = UserSettingsForm(request.POST, instance=request.user)
+        profile_form = ProfileSettingsForm(request.POST, instance=request.user.user_info)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your settings have been updated successfully.')
+            return redirect('user_settings')
+
+    return render(request, 'account/settings.html', {'user_form': user_form,
+                                                     'profile_form': profile_form})
+
+
+@login_required
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        print(f'user to delete: {user}')
+        # user.delete()
+        messages.success(request, 'Your account has been deleted.')
+        return redirect('people:list_people')  # Redirect to the home page or another appropriate page
+
+    return render(request, 'account/delete_account.html')

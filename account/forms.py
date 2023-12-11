@@ -48,3 +48,16 @@ class InterestsForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['interests']
+
+
+class UserSettingsForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'username', 'email', 'password']
+
+
+class ProfileSettingsForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['gender', 'date_of_birth', 'gender_preference',
+                  'photo', 'about_me', 'relationship', 'interests']

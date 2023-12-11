@@ -9,4 +9,6 @@ urlpatterns = [
     path('profile_register/', views.profile_registration, name='profile_register'),
     path('relationship/', views.relationship_type_form, name='relationship_form'),
     path('interests/', views.interests_form, name='interests_form'),
+    path('settings/', views.user_settings, name='settings'),
+    path('delete_account/', views.delete_account, name='delete_account'),
 ]

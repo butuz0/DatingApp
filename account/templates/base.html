@@ -17,6 +17,7 @@
                 <a href="{% url 'conversations:all_conversations' %}">Messages</a>
                 <a href="{% url 'people:user_activity' %}">Activity</a>
                 <a href="{% url 'people:user_detail' request.user.username %}">My page</a>
+                <a href="{% url 'account:settings' %}">Settings</a>
             </nav>
         {% endif %}
         {% for message in messages %}
@@ -25,7 +26,7 @@
     </div>
     <div id="content">
         {% block content %}
-
+        
         {% endblock %}
     </div>
     <div id="footer">

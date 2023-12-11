@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Settings
+{% endblock %}
+
+{% block content %}
+    <h2>User Settings</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <button type="submit">Save Changes</button>
+    </form>
+    <br>
+    <button style="background-color: red; color: white">
+        <a href="{% url 'account:delete_account' %}">Delete Account</a>
+    </button>
+
+{% endblock %}

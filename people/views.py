@@ -19,8 +19,8 @@ def list_people(request):
     current_user = request.user.user_info
 
     # filter people by preferences
-    people = (UserProfile.objects.filter(gender_preference__in=['BOTH', current_user.gender])
-              .exclude(user=current_user.user.id))
+    people = (UserProfile.objects.filter(gender_preference__in=[current_user.gender, 'BOTH'])
+              .exclude(user=request.user))
 
     if current_user.gender_preference != 'BOTH':
         people = people.exclude(gender=current_user.gender)
@@ -64,3 +64,54 @@ def like_user(request):
 def user_activity(request):
     likes_list = Like.objects.filter(Q(user_from=request.user) | Q(user_to=request.user))
     return render(request, 'people/user_activity.html', {'likes_list': likes_list})
+
+
+@login_required
+def find_best_match(request):
+    """
+    people only with the same relationship type
+    Age:
+        exact same age = 10 points
+        every 1 year of age difference = 10 - difference*2 points
+    Gender:
+        bisexual = -5 points
+    Interests:
+        exact same interest = 10 points
+        interests from same categories = 5 points
+    """
+    current_user = request.user.user_info
+
+    def get_score(person):
+        score = 0
+
+        age = person.years_old()
+        age_difference = abs(current_user.years_old() - age)
+        score += 10 - age_difference
+
+        if person.gender_preference == 'BOTH':
+            score -= 5
+
+        user_interests = current_user.interests.all()
+        user_interests_groups = [interest.group for interest in user_interests]
+        person_interests = person.interests.all()
+
+        for interest in person_interests:
+            if interest in user_interests:
+                score += 10
+            if interest.group in user_interests_groups:
+                score += 5
+
+        return score
+
+    people = (UserProfile.objects.filter(gender_preference__in=[current_user.gender, 'BOTH'])
+              .filter(relationship=current_user.relationship)
+              .exclude(user=request.user))
+    if current_user.gender_preference != 'BOTH':
+        people = people.exclude(gender=current_user.gender)
+
+    people_scores = {person.user.id: get_score(person) for person in people}
+    people_sorted = [person for person, score in sorted(people_scores.items(), key=lambda x: x[1], reverse=True)]
+
+    best_match = UserProfile.objects.get(user_id=people_sorted[0])
+
+    return render(request, 'people/best_match.html', {'best_match': best_match})

@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load thumbnail %}
+
+{% block title %}
+    Your best match
+{% endblock %}
+
+{% block content %}
+    <div>
+        <h2>Your best match for today is:</h2>
+        <div style="display: flex; flex-direction: row">
+            <div style="padding-right: 3rem">
+                <a href="{% url 'people:user_detail' best_match.user.username %}">
+                    {% if best_match.photo %}
+                        <img src="{% thumbnail best_match.photo '180x180' crop='smart' %}" alt="">
+                    {% else %}
+                        <img src="{% static 'img/no_image.png' %}" alt="">
+                    {% endif %}
+                </a>
+            </div>
+            <div>
+                <p>
+                    <a href="{% url 'people:user_detail' best_match.user.username %}">
+                        {{ best_match.user.first_name }} {{ best_match.user.last_name }},
+                        {{ best_match.years_old }} years old.
+                    </a><br>
+                    Is {{ best_match.get_gender_display }}, (likes {{ best_match.get_gender_preference_display }})<br>
+                    Looking for: {{ best_match.get_relationship_display }}<br>
+                </p>
+                {% for interest in best_match.interests.all %}
+                    {{ interest }};
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

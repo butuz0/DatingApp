@@ -18,6 +18,7 @@
                 <a href="{% url 'people:user_activity' %}">Activity</a>
                 <a href="{% url 'people:user_detail' request.user.username %}">My page</a>
                 <a href="{% url 'account:settings' %}">Settings</a>
+                <a href="{% url 'people:findme' %}">FindMe</a>
             </nav>
         {% endif %}
         {% for message in messages %}

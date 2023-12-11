@@ -25,9 +25,8 @@ class Interest(models.Model):
 class UserProfile(models.Model):
     class Gender(models.TextChoices):
         MALE = 'M', 'Male',
-        FEMALE = 'F', 'Female'
-
-    pref_choice = Gender.choices + [('BOTH', 'Male and Female')]
+        FEMALE = 'F', 'Female',
+        BOTH = 'BOTH', 'Male and Female'
 
     class Relationship(models.TextChoices):
         SHORT = 'short', 'Short Relationship',
@@ -36,10 +35,10 @@ class UserProfile(models.Model):
         FUN = 'fun', 'Having Fun'
 
     user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='user_info', on_delete=models.CASCADE)
-    gender = models.CharField(max_length=2, choices=Gender.choices, null=True)
+    gender = models.CharField(max_length=2, choices=Gender.choices[:-1], null=True)
     date_of_birth = models.DateField(null=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', null=True)
-    gender_preference = models.CharField(max_length=4, choices=pref_choice, null=True)
+    gender_preference = models.CharField(max_length=4, choices=Gender.choices, null=True)
     about_me = models.TextField(null=True)
     relationship = models.CharField(max_length=6, choices=Relationship.choices, null=True)
     interests = models.ManyToManyField(Interest)

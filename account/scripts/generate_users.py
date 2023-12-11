@@ -22,7 +22,7 @@ def generate_users(num_users):
         user_profile = UserProfile.objects.create(user=user,
                                                   gender=random_user.get_gender()[0].capitalize(),
                                                   date_of_birth=random_user.get_dob()[:10],
-                                                  gender_preference=choice(UserProfile.pref_choice)[0],
+                                                  gender_preference=choice(UserProfile.Gender.choices)[0],
                                                   relationship=choice(UserProfile.Relationship.choices)[0])
 
         # choose random interests

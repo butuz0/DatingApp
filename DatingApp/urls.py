@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,6 +26,7 @@ urlpatterns = [
     path('people/', include('people.urls', namespace='people')),
     path('conversations/', include('conversations.urls', namespace='conversations')),
     path('social-auth/', include('social_django.urls', namespace='social')),
+    path('', views.home_page, name='home_page'),
 ]
 
 if settings.DEBUG:

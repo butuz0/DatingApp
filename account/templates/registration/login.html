@@ -1,7 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     Log in
+{% endblock %}
+
+{% block styles_link %}
+    {% static 'account/css/login_page.css' %}
 {% endblock %}
 
 {% block content %}

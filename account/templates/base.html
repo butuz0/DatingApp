@@ -7,31 +7,41 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>FindMe |{% block title %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static "css/base.css" %}">
+    <link rel="stylesheet" href="{% static "account/css/base.css" %}">
+    <link rel="stylesheet" href="{% block styles_link %}{% endblock %}">
 </head>
 <body>
-    <div id="header">
-        {% if request.user.is_authenticated %}
+    <div id="page">
+        <div id="left_block">
+            {% if request.user.is_authenticated %}
+                <nav>
+                    <ul>
+                        <li><a class="button" href="{% url 'people:list_people' %}">People</a></li>
+                        <li><a class="button" href="{% url 'conversations:all_conversations' %}">Messages</a></li>
+                        <li><a class="button" href="{% url 'people:user_activity' %}">Activity</a></li>
+                        <li><a class="button" href="{% url 'people:findme' %}">FindMe</a></li>
+                    </ul>
+                </nav>
+            {% endif %}
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+        <div id="content">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+        <div id="right_block">
             <nav>
-                <a href="{% url 'people:list_people' %}">People</a>
-                <a href="{% url 'conversations:all_conversations' %}">Messages</a>
-                <a href="{% url 'people:user_activity' %}">Activity</a>
-                <a href="{% url 'people:user_detail' request.user.username %}">My page</a>
-                <a href="{% url 'account:settings' %}">Settings</a>
-                <a href="{% url 'people:findme' %}">FindMe</a>
+                <ul>
+                    <li><a href="{% url 'people:user_detail' request.user %}">My Profile</a></li>
+                    <li><a href="{% url 'account:settings' %}">Settings</a></li>
+                </ul>
             </nav>
-        {% endif %}
-        {% for message in messages %}
-            {{ message }}
-        {% endfor %}
+        </div>
     </div>
-    <div id="content">
-        {% block content %}
-        
-        {% endblock %}
-    </div>
-    <div id="footer">
-    </div>
+
     <script src="//cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <script>
         const csrftoken = Cookies.get('csrftoken');

@@ -1,0 +1,45 @@
+body {
+    font-family: 'Trebuchet MS', sans-serif;
+}
+
+#page {
+    display: flex;
+    flex-direction: row;
+    height: 98vh;
+}
+
+#left_block {
+    width: 25%;
+    background-color: #f6bdff;
+}
+
+#content {
+    width: 50%;
+    padding-left: 1%;
+    padding-right: 1%;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+#content::-webkit-scrollbar {
+    display: none;
+}
+
+#right_block {
+    width: 25%;
+    background-color: #f6bdff;
+}
+
+ul {
+    list-style-type: none;
+    width: 25%;
+    height: 100%;
+}
+
+li {
+    margin: 10px;
+}
+
+img {
+    width: 50%;
+}

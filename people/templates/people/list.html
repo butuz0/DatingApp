@@ -6,11 +6,15 @@
     People
 {% endblock %}
 
+{% block styles_link %}
+    {% static "people/css/people_list.css" %}
+{% endblock %}
+
 {% block content %}
     <div>
         <ul>
             {% for person in people %}
-                <li style="display: flex; flex-direction: row">
+                <div class="person">
                     <div style="padding-right: 3rem">
                         <a href="{% url 'people:user_detail' person.user.username %}">
                             {% if person.photo %}
@@ -33,7 +37,8 @@
                             {{ interest }};
                         {% endfor %}
                     </div>
-                </li>
+                </div>
+
             {% endfor %}
         </ul>
     </div>

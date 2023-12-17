@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from django.db.models import Q
 from django.conf import settings
-from account.models import UserProfile, Like
+from account.models import UserProfile, Like, Report
 from datetime import datetime
 import requests
 import json
@@ -137,3 +137,9 @@ def find_best_match(request):
     best_match = UserProfile.objects.get(user_id=best_score_user_id)
 
     return render(request, 'people/best_match.html', {'best_match': best_match})
+
+
+@login_required
+def report_user(request, reported_user):
+    Report.objects.create(user_from=request.user, reported_user=reported_user)
+    redirect(reverse('account:user_register', kwargs={'username': reported_user.username}))

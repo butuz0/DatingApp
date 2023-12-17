@@ -74,3 +74,18 @@ user_model.add_to_class('likes', models.ManyToManyField('self',
                                                         through=Like,
                                                         related_name='liked_by',
                                                         symmetrical=False))
+
+
+class Report(models.Model):
+    user_from = models.ForeignKey('auth.User', related_name='user_from', on_delete=models.CASCADE)
+    reported_user = models.ForeignKey('auth.User', related_name='reported_user', on_delete=models.CASCADE)
+    created = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['-created'])
+        ]
+        ordering = ['-created']
+
+    def __str__(self):
+        return f'{self.user_from} reported {self.reported_user} on {self.created}'

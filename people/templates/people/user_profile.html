@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {{ user.username }} Profile
+    {{ user.username }} profile
 {% endblock %}
 
 {% block styles_link %}
@@ -41,6 +41,7 @@
             {% endif %}
         </a><br>
         <a href="{% url 'conversations:conversation_detail' user.id %}">Contact Me!</a>
+        <a href="{% url 'people:report_user' user.id %}">Report</a>
     {% else %}
         <a href="{% url 'people:create_post' user.username %}">New Post</a>
     {% endif %}

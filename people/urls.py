@@ -11,4 +11,5 @@ urlpatterns = [
     path('like/', views.like_user, name='like_user'),
     path('<username>/new_post/', blog_views.create_post, name='create_post'),
     path('findme/', views.find_best_match, name='findme'),
+    path('report/<reported_user_id>', views.report_user, name='report_user'),
 ]

@@ -140,6 +140,7 @@ def find_best_match(request):
 
 
 @login_required
-def report_user(request, reported_user):
+def report_user(request, reported_user_id):
+    reported_user = User.objects.get(id=reported_user_id)
     Report.objects.create(user_from=request.user, reported_user=reported_user)
-    redirect(reverse('account:user_register', kwargs={'username': reported_user.username}))
+    return redirect(reverse('people:user_detail', kwargs={'username': reported_user.username}))

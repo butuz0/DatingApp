@@ -12,7 +12,9 @@
 
 {% block content %}
     <div id="login_page">
+        <h1>FindMe</h1>
         <h2>To continue,<br>log in your account</h2>
+
         {% if form.errors %}
             <p>
                 Your username and password did not match.
@@ -22,29 +24,32 @@
         {% endif %}
         <form action="" method="post">
             {% csrf_token %}
-            {#            {{ form.as_p }}#}
-            <p>
-                {{ form.username|add_attr:'placeholder:Username' }}
-            </p>
-            <p>
-                {{ form.password|add_attr:'placeholder:Password' }}
-            </p>
-            <input type="submit" value="Log In">
+            {{ form.username|add_attr:'placeholder:Username' }}
+            {{ form.password|add_attr:'placeholder:Password' }}
+            <input class="form_submit" type="submit" value="Log In">
         </form>
+
+        <div style="display: flex; justify-content: center">
+            <div class="separator">
+                OR
+            </div>
+        </div>
+
         <div class="social">
             <ul>
                 <li class="google">
-                    <a href="{% url "social:begin" "google-oauth2" %}">
+                    <a class="social_auth_button" href="{% url "social:begin" "google-oauth2" %}">
                         Continue with Google
                     </a>
                 </li>
                 <li class="facebook">
-                    <a href="{% url "social:begin" "facebook" %}">
+                    <a class="social_auth_button" href="{% url "social:begin" "facebook" %}">
                         Continue with Facebook
                     </a>
                 </li>
             </ul>
         </div>
+
         <p>
             Don't have an account?
             <a href="{% url 'account:user_register' %}">Sign up</a>

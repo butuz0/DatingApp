@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from .models import Conversation, Message
+from account.models import Like
 from .forms import CreateMessageForm
 
 
@@ -27,13 +29,29 @@ def all_conversations(request):
 
 @login_required
 def conversation_detail(request, user_id):
+    person = User.objects.get(id=user_id)
+    allow_conversation = True
+
     try:
         conversation = Conversation.objects.filter(users__in=[str(request.user.id)]).filter(users__in=[user_id]).get()
     except Conversation.DoesNotExist:
-        conversation = Conversation.objects.create()
-        conversation.users.add(str(request.user.id))
-        conversation.users.add(user_id)
-        conversation.save()
+        # allow to start conversation only if users liked each other
+        try:
+            like = Like.objects.get(user_from=request.user, user_to=person)
+        except Like.DoesNotExist:
+            allow_conversation = False
+        else:
+            if not like.match():
+                allow_conversation = False
+
+        if not allow_conversation:
+            return render(request, 'conversations/conversation_details.html', {'person': person,
+                                                                               'allow_conversation': allow_conversation})
+        else:
+            conversation = Conversation.objects.create()
+            conversation.users.add(str(request.user.id))
+            conversation.users.add(user_id)
+            conversation.save()
 
     if request.method == 'POST':
         message_form = CreateMessageForm(request.POST)
@@ -50,5 +68,7 @@ def conversation_detail(request, user_id):
         Message.objects.filter(conversation=conversation, created_by=user_id,
                                message_read=False).update(message_read=True)
 
-    return render(request, 'conversations/detail.html', {'conversation': conversation,
-                                                         'message_form': message_form})
+    return render(request, 'conversations/conversation_details.html', {'conversation': conversation,
+                                                                       'message_form': message_form,
+                                                                       'person': person,
+                                                                       'allow_conversation': allow_conversation})

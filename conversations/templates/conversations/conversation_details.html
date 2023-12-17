@@ -1,25 +1,63 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load thumbnail %}
 
 {% block title %}
     Conversation
 {% endblock %}
 
+{% block styles_link %}
+    {% static "conversations/css/conversation_details.css" %}
+{% endblock %}
+
 {% block content %}
-    {% if conversation.messages %}
-        {% for message in conversation %}
-            <div class="message {% if message.created_by == request.user %}sent{% else %}received{% endif %}">
-                <p>
-                    <strong>{{ message.created_by.username }}</strong> @ {{ message.created_at }}
-                </p>
-                <p>{{ message.message_text }}</p>
+    <div style="height: 99%">
+        <div class="person_info">
+            {% if person.user_info.photo %}
+                <img src="{% thumbnail person.user_info.photo '180x180' crop='smart' %}" alt="">
+                {# <img src="{{ person.photo.url }}" alt="">#}
+            {% else %}
+                <img src="{% static 'img/no_image.png' %}" alt="">
+            {% endif %}
+            <div class="person_name">
+                <a href="{% url 'people:user_detail' person.username %}">
+                    <h2>
+                        {{ person.first_name }} {{ person.last_name }}
+                    </h2>
+                </a>
             </div>
-        {% endfor %}
-    {% endif %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ message_form.as_p }}
-        <input type="submit" value="Send">
-    </form>
+        </div>
+        {% if allow_conversation %}
+            <div class="messages">
+                {% if conversation.messages %}
+                    {% for message in conversation %}
+                        <div class="message {% if message.created_by == request.user %}sent{% else %}received{% endif %}">
+                            <div class="message_text">
+                                <p>{{ message.message_text }}</p>
+                            </div>
+                            <p class="message_time_sent">{{ message.created_at }}</p>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+
+            <div class="new_message">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    {{ message_form }}
+                    <input type="submit" value="Send">
+                </form>
+            </div>
+        {% else %}
+            <div class="conversation_disallowed">
+                <h2 style="width: 60%">
+                    You can't start a conversation without mutual like
+                </h2>
+            </div>
+        {% endif %}
+
+    </div>
+    <script src="{% static 'conversations/js/conversation_details.js' %}"></script>
 {% endblock %}
 
 <script>

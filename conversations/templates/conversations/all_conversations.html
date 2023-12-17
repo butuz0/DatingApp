@@ -29,7 +29,7 @@
                                 <strong>{{ user.first_name }} {{ user.last_name }}</strong>
                             </p>
                             {% with conversation.messages.all.last as last_message %}
-                                <p>
+                                <p class="last_message">
                                     {% if last_message.created_by == request.user %}
                                         You
                                     {% else %}

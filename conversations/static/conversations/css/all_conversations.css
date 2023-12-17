@@ -1,0 +1,56 @@
+h1 {
+    text-align: center;
+}
+
+.conversation_link {
+    text-decoration: none;
+}
+
+.conversation:hover {
+    background-color: #e3e3e3;
+}
+
+.conversation {
+    border: 1px solid black;
+    margin-bottom: 1%;
+    padding: 1%;
+    border-radius: 15px;
+    font-size: 20px;
+    color: black;
+    display: flex;
+}
+
+.conversation img {
+    display: block;
+    width: 15%;
+    height: 15%;
+    border-radius: 100%;
+    border: 1px solid gray;
+}
+
+.conversation_info {
+    width: 85%;
+    padding-left: 3%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+p {
+    margin: 0;
+}
+
+.last_message {
+    color: #5a5862;
+}
+
+.unread_messages {
+    background-color: #CA3257;
+    color: white;
+    padding: 3px;
+    width: 1.3em;
+    height: fit-content;
+    text-align: center;
+    border: 1px solid grey;
+    border-radius: 100%;
+}

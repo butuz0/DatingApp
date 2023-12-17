@@ -12,13 +12,14 @@
 
 {% block content %}
     <div>
-        <ul>
-            {% for person in people %}
-                <div class="person">
-                    <div style="padding-right: 3rem">
+        {% for person in people %}
+            <div class="person">
+                <div class="person_info">
+                    <div>
                         <a href="{% url 'people:user_detail' person.user.username %}">
                             {% if person.photo %}
                                 <img src="{% thumbnail person.photo '180x180' crop='smart' %}" alt="">
+                                {#<img src="{{ person.photo.url }}" alt="">#}
                             {% else %}
                                 <img src="{% static 'img/no_image.png' %}" alt="">
                             {% endif %}
@@ -38,8 +39,13 @@
                         {% endfor %}
                     </div>
                 </div>
-
-            {% endfor %}
-        </ul>
+            </div>
+        {% endfor %}
     </div>
 {% endblock %}
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[0].classList.add("selected");
+    {% endblock %}
+</script>

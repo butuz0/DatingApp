@@ -25,16 +25,16 @@ def list_people(request):
     if current_user.gender_preference != 'BOTH':
         people = people.exclude(gender=current_user.gender)
 
-    return render(request, 'people/list.html', {'current_user': current_user,
-                                                'people': people})
+    return render(request, 'people/users_list.html', {'current_user': current_user,
+                                                      'people': people})
 
 
 @login_required
 def user_detail(request, username):
     user = get_object_or_404(User, username=username)
     posts = user.blog_posts.all()
-    return render(request, 'people/detail.html', {'user': user,
-                                                  'posts': posts})
+    return render(request, 'people/user_profile.html', {'user': user,
+                                                        'posts': posts})
 
 
 @login_required

@@ -21,3 +21,10 @@
         <input type="submit" value="Send">
     </form>
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[1].classList.add("selected");
+    {% endblock %}
+</script>

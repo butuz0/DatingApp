@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load account_extras %}
 
 {% block title %}
     Log in
@@ -10,36 +11,44 @@
 {% endblock %}
 
 {% block content %}
-    <h1>Log In</h1>
-    {% if form.errors %}
+    <div id="login_page">
+        <h2>To continue,<br>log in your account</h2>
+        {% if form.errors %}
+            <p>
+                Your username and password did not match.
+                Please try again.
+            </p>
+        {% else %}
+        {% endif %}
+        <form action="" method="post">
+            {% csrf_token %}
+            {#            {{ form.as_p }}#}
+            <p>
+                {{ form.username|add_attr:'placeholder:Username' }}
+            </p>
+            <p>
+                {{ form.password|add_attr:'placeholder:Password' }}
+            </p>
+            <input type="submit" value="Log In">
+        </form>
+        <div class="social">
+            <ul>
+                <li class="google">
+                    <a href="{% url "social:begin" "google-oauth2" %}">
+                        Continue with Google
+                    </a>
+                </li>
+                <li class="facebook">
+                    <a href="{% url "social:begin" "facebook" %}">
+                        Continue with Facebook
+                    </a>
+                </li>
+            </ul>
+        </div>
         <p>
-            Your username and password did not match.
-            Please try again.
+            Don't have an account?
+            <a href="{% url 'account:user_register' %}">Sign up</a>
         </p>
-    {% else %}
-        <p>
-            Please use the following form to Log In. <br>
-            If you don't have an account
-            <a href="{% url 'account:user_register' %}">register here</a>.
-        </p>
-    {% endif %}
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Log In">
-    </form>
-    <div class="social">
-        <ul>
-            <li class="facebook">
-                <a href="{% url "social:begin" "facebook" %}">
-                    Sign in with Facebook
-                </a>
-            </li>
-            <li class="google">
-                <a href="{% url "social:begin" "google-oauth2" %}">
-                    Sign in with Google
-                </a>
-            </li>
-        </ul>
     </div>
+
 {% endblock %}

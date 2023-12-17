@@ -58,6 +58,7 @@ def conversation_detail(request, user_id):
         if message_form.is_valid():
             message = message_form.save(commit=False)
             message.conversation = conversation
+            conversation.update()
             message.created_by = request.user
             message.save()
         return redirect('conversations:conversation_detail', user_id=user_id)

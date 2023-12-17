@@ -1,33 +1,59 @@
 {% extends 'base.html' %}
 {% load conversations_extras %}
+{% load static %}
+{% load thumbnail %}
 
 {% block title %}
     All conversations
 {% endblock %}
 
+{% block styles_link %}
+    {% static "conversations/css/all_conversations.css" %}
+{% endblock %}
+
 {% block content %}
     <h1>Your conversations</h1>
     {% for conversation in conversations %}
-        <div>
-            <div style="display: flex;">
-                <div>
-                    {% for user in conversation.users.all %}
-                        {% if user != request.user %}
-                            <a href="{% url 'conversations:conversation_detail' user.id %}">
-                                <p>{{ user.first_name }} {{ user.last_name }} | {{ conversation.updated }}</p>
-                            </a>
+        {% for user in conversation.users.all %}
+            {% if user != request.user %}
+                <a class="conversation_link" href="{% url 'conversations:conversation_detail' user.id %}">
+                    <div class="conversation">
+                        {% if user.user_info.photo %}
+                            <img src="{% thumbnail user.user_info.photo '180x180' crop='smart' %}" alt="">
+                            {#                            <img src="{{ person.photo.url }}" alt="">#}
+                        {% else %}
+                            <img src="{% static 'img/no_image.png' %}" alt="">
                         {% endif %}
-                    {% endfor %}
-                </div>
-                <div>
-                    <p>You have {{ unread_messages_counts|index:forloop.counter0 }} unread messages</p>
-                </div>
-            </div>
-            <div>
-                {% with conversation.messages.all.last as last_message %}
-                    <p>{{ last_message.created_by }}: {{ last_message }}</p>
-                {% endwith %}
-            </div>
-        </div>
+                        <div class="conversation_info">
+                            <p>
+                                <strong>{{ user.first_name }} {{ user.last_name }}</strong>
+                            </p>
+                            {% with conversation.messages.all.last as last_message %}
+                                <p>
+                                    {% if last_message.created_by == request.user %}
+                                        You
+                                    {% else %}
+                                        {{ last_message.created_by.first_name }}
+                                    {% endif %}: {{ last_message|truncatechars_html:15 }}
+                                    | {{ conversation.updated }}
+                                </p>
+                            {% endwith %}
+                        </div>
+                        {% with unread_messages_counts|index:forloop.counter0 as unread_messages %}
+                            {% if unread_messages != 0 %}
+                                <p class="unread_messages">{{ unread_messages }}</p>
+                            {% endif %}
+                        {% endwith %}
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
     {% endfor %}
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[1].classList.add("selected");
+    {% endblock %}
+</script>

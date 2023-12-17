@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.utils import timezone
 
 
 # Create your models here.
@@ -20,6 +21,10 @@ class Conversation(models.Model):
         messages = self.messages.all()
         for message in messages:
             yield message
+
+    def update(self):
+        self.updated = timezone.now()
+        self.save()
 
 
 class Message(models.Model):

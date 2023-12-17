@@ -7,6 +7,7 @@ from .models import UserProfile, Like, GroupOfInterests, Interest, Report
 class ProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'date_of_birth', 'gender', 'gender_preference', 'photo']
     raw_id_fields = ['user']
+    search_fields = ['user__username']
 
 
 @admin.register(Like)
@@ -26,4 +27,4 @@ class ProfileAdmin(admin.ModelAdmin):
 
 @admin.register(Report)
 class ReportAdmin(admin.ModelAdmin):
-    list_display = ['user_from', 'user_reported', 'created']
+    list_display = ['user_from', 'reported_user', 'created']

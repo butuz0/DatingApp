@@ -1,0 +1,49 @@
+h1 {
+    text-align: center;
+}
+
+.activity {
+    border: 1px solid grey;
+    margin-bottom: 1%;
+    padding: 1%;
+    border-radius: 15px;
+    font-size: 20px;
+    color: black;
+    display: flex;
+}
+
+.activity img {
+    display: block;
+    width: 15%;
+    height: 15%;
+    border-radius: 100%;
+    border: 1px solid gray;
+}
+
+.activity div {
+    width: 85%;
+    padding-left: 3%;
+    display: flex;
+    font-size: 23px;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.activity p {
+    margin: 0;
+    padding: 1%;
+}
+
+.user_liked p {
+    text-align: right;
+    padding-right: 3%;
+}
+
+.liked_by p {
+    text-align: left;
+}
+
+.like_time {
+    font-size: medium;
+    color: #5a5862;
+}

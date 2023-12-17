@@ -6,28 +6,59 @@
     Your activity
 {% endblock %}
 
+{% block styles_link %}
+    {% static 'people/css/activity.css' %}
+{% endblock %}
+
 {% block content %}
     <h1>Your activity</h1>
     {% if likes_list %}
         {% for like in likes_list %}
-            <div>
-                <p>
-                    {% if like.user_from == request.user %}
-                        You liked
-                        <a href="{{ like.user_to.user_info.get_absolute_url }}">
-                            {{ like.user_to.first_name }} {{ like.user_to.last_name }}
-                        </a>
-                        at {{ like.created }}
+            <div class="activity {% if like.user_from == request.user %}user_liked{% else %}liked_by{% endif %}">
+
+                {% if like.user_from == request.user %}
+                    <div>
+                        <p class="like_time">{{ like.created }}</p>
+                        <p>
+                            You liked
+                            <a href="{{ like.user_to.user_info.get_absolute_url }}">
+                                {{ like.user_to.first_name }} {{ like.user_to.last_name }}
+                            </a>
+                        </p>
+                    </div>
+
+                    {% if like.user_to.user_info.photo %}
+                        <img src="{% thumbnail like.user_to.user_info.photo '180x180' crop='smart' %}" alt="">
                     {% else %}
-                        <a href="{{ like.user_from.user_info.get_absolute_url }}">
-                            {{ like.user_from.first_name }} {{ like.user_from.first_name }}
-                        </a>
-                        liked you at {{ like.created }}
+                        <img src="{% static 'img/no_image.png' %}" alt="">
                     {% endif %}
-                </p>
+
+                {% else %}
+                    {% if like.user_from.user_info.photo %}
+                        <img src="{% thumbnail like.user_from.user_info.photo '180x180' crop='smart' %}" alt="">
+                    {% else %}
+                        <img src="{% static 'img/no_image.png' %}" alt="">
+                    {% endif %}
+                    <div>
+                        <p class="like_time">{{ like.created }}</p>
+                        <p>
+                            <a href="{{ like.user_from.user_info.get_absolute_url }}">
+                                {{ like.user_from.first_name }} {{ like.user_from.first_name }}
+                            </a>
+                            liked you
+                        </p>
+                    </div>
+                {% endif %}
             </div>
         {% endfor %}
     {% else %}
         You did not have any activity recently
     {% endif %}
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[2].classList.add("selected");
+    {% endblock %}
+</script>

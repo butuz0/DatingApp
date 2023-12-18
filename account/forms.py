@@ -56,6 +56,9 @@ class LoginForm(forms.Form):
 
 
 class RelationshipForm(forms.ModelForm):
+    relationship = forms.ChoiceField(choices=UserProfile.Relationship.choices,
+                                     widget=forms.RadioSelect, required=True)
+
     class Meta:
         model = UserProfile
         fields = ['relationship']

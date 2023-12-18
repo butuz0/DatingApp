@@ -16,7 +16,7 @@ class GroupOfInterests(models.Model):
 
 class Interest(models.Model):
     name = models.CharField(max_length=50)
-    group = models.ForeignKey(GroupOfInterests, on_delete=models.CASCADE)
+    group = models.ForeignKey(GroupOfInterests, related_name='interests', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name

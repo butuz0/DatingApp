@@ -17,6 +17,7 @@ def user_registration(request):
             new_user = form.save(commit=False)
             new_user.set_password(form.cleaned_data['password'])
             new_user.save()
+            login(request, new_user, backend='django.contrib.auth.backends.ModelBackend')
             return redirect(reverse('account:profile_register'))
     else:
         form = UserRegistrationForm()
@@ -31,7 +32,6 @@ def profile_registration(request):
             cd = form.cleaned_data
 
             user = request.user
-            login(request, user)
             user.first_name = cd['first_name']
             user.last_name = cd['last_name']
             user.save()
@@ -40,11 +40,10 @@ def profile_registration(request):
                                                  gender=cd['gender'],
                                                  date_of_birth=cd['date_of_birth'],
                                                  photo=cd['photo'],
-                                                 preferences=cd['preferences'],
+                                                 gender_preference=cd['gender_preference'],
                                                  about_me=cd['about_me'])
             profile.save()
-
-            return render(request, 'account/registration_done.html', {'profile': profile})
+            return redirect(reverse('account:relationship_type_form'))
     else:
         form = ProfileRegistrationForm()
     return render(request, 'account/profile_register.html', {'form': form})
@@ -86,7 +85,7 @@ def user_settings(request):
             user_form.save()
             profile_form.save()
             messages.success(request, 'Your settings have been updated successfully.')
-            return redirect('user_settings')
+            return redirect('account:settings')
 
     return render(request, 'account/settings.html', {'user_form': user_form,
                                                      'profile_form': profile_form})

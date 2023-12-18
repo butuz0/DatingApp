@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from .models import UserProfile
+from datetime import date
 
 
 class UserRegistrationForm(forms.ModelForm):
@@ -32,10 +33,21 @@ class UserRegistrationForm(forms.ModelForm):
 class ProfileRegistrationForm(forms.ModelForm):
     first_name = forms.CharField(max_length=200)
     last_name = forms.CharField(max_length=200)
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
 
     class Meta:
         model = UserProfile
         fields = ['gender', 'date_of_birth', 'gender_preference', 'photo', 'about_me']
+
+    def clean_date_of_birth(self):
+        today = date.today()
+        birthday = self.cleaned_data['date_of_birth']
+        age = today.year - birthday.year - ((today.month, today.day) < (birthday.month, birthday.day))
+        if age < 0:
+            raise forms.ValidationError('Enter valid date of birth.')
+        if age < 18:
+            raise forms.ValidationError('You must be 18 years or older.')
+        return self.cleaned_data['date_of_birth']
 
 
 class LoginForm(forms.Form):

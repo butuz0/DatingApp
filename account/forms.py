@@ -4,24 +4,29 @@ from .models import UserProfile
 
 
 class UserRegistrationForm(forms.ModelForm):
-    password = forms.CharField(label='Password', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput)
+    username = forms.CharField(label='Password', required=True)
+    email = forms.EmailField(label='Email', required=True)
+    password = forms.CharField(label='Password', widget=forms.PasswordInput, required=True)
+    password2 = forms.CharField(label='Repeat password', widget=forms.PasswordInput, required=True)
 
     class Meta:
         model = User
         fields = ['username', 'email']
 
-        def clean_password2(self):
-            cd = self.cleaned_data
-            if cd['password'] != cd['password2']:
-                raise forms.ValidationError('Passwords do not match')
-            return cd['password2']
+    def clean_password2(self):
+        cd = self.cleaned_data
+        if cd['password'] != cd['password2']:
+            raise forms.ValidationError('Passwords do not match')
+        return cd['password2']
 
-        def clean_email(self):
-            user_email = self.cleaned_data['email']
-            if User.objects.get(email=user_email):
-                raise forms.ValidationError('Email already in user')
+    def clean_email(self):
+        user_email = self.cleaned_data['email']
+        try:
+            User.objects.get(email=user_email)
+        except User.DoesNotExist:
             return user_email
+        else:
+            raise forms.ValidationError('Email already in use')
 
 
 class ProfileRegistrationForm(forms.ModelForm):

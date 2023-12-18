@@ -1,15 +1,47 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load account_extras %}
 
 {% block title %}
     Add personal info
 {% endblock %}
 
+{% block styles_link %}
+    {% static 'account/css/registration.css' %}
+{% endblock %}
+
 {% block content %}
     <h1>Add personal info</h1>
-    <p>Please, add personal info using form below</p>
+    <p>Please, add personal information using the form below</p>
     <form action="" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Done">
+        {{ form.first_name|add_attr:'placeholder:First Name' }}
+        {{ form.last_name|add_attr:'placeholder:Last Name' }}
+        {{ form.date_of_birth|add_attr:'placeholder:Birthday' }}
+        <table>
+            <tr>
+                <td>Your gender</td>
+                <td>{{ form.gender }}</td>
+            </tr>
+            <tr>
+                <td>Preference</td>
+                <td>{{ form.gender_preference|add_attr:'placeholder:Your preferences' }}</td>
+            </tr>
+        </table>
+        {{ form.about_me|add_attr:'placeholder:Tell about yourself,rows:5' }}
+        {{ form.photo }}
+        <input class="form_submit" type="submit" value="Next">
     </form>
 {% endblock %}
+
+<script>
+    {% block domready %}
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+</script>

@@ -1,14 +1,42 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     Choose your Relationship
 {% endblock %}
 
-{% block content %}
-    <p>Please choose the type of relationship you are looking for</p>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Continue">
-    </form>
+{% block styles_link %}
+    {% static 'account/css/registration.css' %}
 {% endblock %}
+
+{% block content %}
+    <div id="relationship">
+        <h1>What are you looking for?</h1>
+        <form action="" method="post">
+            {% csrf_token %}
+            <div class="relationship_choices">
+                {% for choice in form.relationship %}
+                    <div class="choice">
+                        {{ choice }}
+                    </div>
+                {% endfor %}
+            </div>
+            <input class="form_submit" type="submit" value="Next">
+        </form>
+    </div>
+{% endblock %}
+<script>
+    {% block domready %}
+        const choices = document.getElementsByClassName("choice");
+        for (let i = 0; i < choices.length; i++) {
+            choices[i].addEventListener("click", () => {
+                for (let j = 0; j < choices.length; j++) {
+                    choices[j].style.color = "black";
+                    choices[j].style.backgroundImage = null;
+                }
+                choices[i].style.backgroundImage = "linear-gradient(to right, #ff0084, #72003f)";
+                choices[i].style.color = "white";
+            })
+        }
+    {% endblock %}
+</script>

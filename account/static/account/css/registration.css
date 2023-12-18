@@ -103,6 +103,43 @@ input[type="date"]:valid:before {
     content: "";
 }
 
+#relationship {
+    text-align: left;
+}
+
+.relationship_choices {
+    margin: 5px;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.choice {
+    position: relative;
+    height: 6rem;
+    width: 6rem;
+    border: 1px solid grey;
+    margin: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    padding: 1rem;
+}
+
+input[type="radio"] {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+}
+
+
 /*.social li.facebook {*/
 /*    background: #3b5399;*/
 /*}*/

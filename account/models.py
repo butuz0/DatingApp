@@ -8,9 +8,10 @@ import datetime
 
 class GroupOfInterests(models.Model):
     name = models.CharField(max_length=50)
+    background_color = models.CharField(max_length=10, default='#FFFFFF')
 
     def __str__(self):
-        return self.name
+        return f'{self.name} : {self.background_color}'
 
 
 class Interest(models.Model):

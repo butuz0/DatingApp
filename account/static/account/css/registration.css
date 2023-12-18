@@ -23,7 +23,7 @@ form {
     align-items: center;
 }
 
-input {
+input, select {
     display: block;
     width: 40%;
     margin: 5px;
@@ -31,6 +31,31 @@ input {
     border-radius: 5px;
     border: 1px solid gray;
     font-size: 18px;
+}
+
+table {
+    margin: 10px 0;
+    width: 50%;
+}
+
+td select {
+    width: 100%;
+}
+
+td {
+    text-align: right;
+}
+
+textarea {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid grey;
+    border-radius: 5px;
+    resize: none;
+    font-size: large;
+    font-family: 'Trebuchet MS', sans-serif;
+    width: 50%;
+    margin-bottom: 10px;
 }
 
 .form_submit {
@@ -62,3 +87,28 @@ input {
 .separator:not(:empty)::after {
     margin-left: .25em;
 }
+
+input[type="file"] {
+    font-size: 14px;
+}
+
+input[type="date"]:before {
+    content: attr(placeholder) !important;
+    color: grey;
+    margin-right: 0.5em;
+}
+
+input[type="date"]:focus:before,
+input[type="date"]:valid:before {
+    content: "";
+}
+
+/*.social li.facebook {*/
+/*    background: #3b5399;*/
+/*}*/
+/*.social li.google {*/
+/*    background: #de1710;*/
+/*}*/
+/*#left_block, #right_block {*/
+/*    display: none;*/
+/*}*/

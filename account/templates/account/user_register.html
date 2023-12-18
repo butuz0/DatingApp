@@ -1,15 +1,37 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load account_extras %}
 
 {% block title %}
-	Create your account
+    Create your account
+{% endblock %}
+
+{% block styles_link %}
+    {% static 'account/css/registration.css' %}
 {% endblock %}
 
 {% block content %}
-	<h1>Create new account</h1>
+    <h1>Create new account</h1>
     <p>Please, sign up using the form below</p>
+
     <form action="" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Create new account">
+        {{ form.username|add_attr:'placeholder:Username' }}
+        {{ form.email|add_attr:'placeholder:Email' }}
+        {{ form.password|add_attr:'placeholder:Password' }}
+        {{ form.password2|add_attr:'placeholder:Repeat password' }}
+        <input class="form_submit" type="submit" value="Create new account">
     </form>
 {% endblock %}
+
+<script>
+    {% block domready %}
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+</script>

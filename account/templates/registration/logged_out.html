@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     Logged Out
 {% endblock %}
 
+{% block styles_link %}
+    {% static 'account/css/registration.css' %}
+{% endblock %}
+
 {% block content %}
     <h1>Logged Out</h1>
     <p>You have been successfully logged out</p>
-    You can <a href="{% url 'account:login' %}">log in again</a>
+    <p>You can <a href="{% url 'account:login' %}">log in</a> again</p>
 {% endblock %}

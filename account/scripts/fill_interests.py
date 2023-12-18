@@ -30,9 +30,19 @@ INTERESTS = {
                   'Pet Lover', 'Home Decor and Interior Design']
 }
 
+BACKGROUND_COLORS = ['#F19191', '#F1C17F', '#E3E559', '#AEE559', '#59E57F', '#58DCC8',
+                     '#58AADC', '#5858DC', '#A058DC', '#D858DC', '#DC588C']
+
 
 def fill_interests():
     for group in INTERESTS:
         g, group_created = GroupOfInterests.objects.get_or_create(name=group)
         for interest in INTERESTS[group]:
             i, interest_created = Interest.objects.get_or_create(name=interest, group=g)
+
+
+def add_background_colors():
+    groups = GroupOfInterests.objects.all()
+    for group, color in zip(groups, BACKGROUND_COLORS):
+        group.background_color = color
+        group.save()

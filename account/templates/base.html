@@ -19,7 +19,7 @@
                         <li><a class="button" href="{% url 'people:list_people' %}">People</a></li>
                         <li><a class="button" href="{% url 'conversations:all_conversations' %}">Messages</a></li>
                         <li><a class="button" href="{% url 'people:user_activity' %}">Activity</a></li>
-                        <li><a class="button" href="{% url 'people:findme' %}">FindMe</a></li>
+                        <li><a class="button" href="{% url 'people:findme' %}">Find Me!</a></li>
                     </ul>
                 </nav>
             {% endif %}
@@ -35,8 +35,9 @@
         <div id="right_block">
             <nav>
                 <ul>
-                    <li><a href="{% url 'people:user_detail' request.user %}">My Profile</a></li>
-                    <li><a href="{% url 'account:settings' %}">Settings</a></li>
+                    <li><a class="button" href="{% url 'people:user_detail' request.user %}">My Profile</a></li>
+                    <li><a class="button" href="{% url 'account:settings' %}">Settings</a></li>
+                    <li><a class="button" href="{% url 'account:logout' %}">Log out</a></li>
                 </ul>
             </nav>
         </div>
@@ -44,10 +45,9 @@
 
     <script src="//cdn.jsdelivr.net/npm/js-cookie@3.0.1/dist/js.cookie.min.js"></script>
     <script>
-        const csrftoken = Cookies.get('csrftoken');
-        document.addEventListener('DOMContentLoaded', (event) => {
+        const csrftoken = Cookies.get("csrftoken");
+        document.addEventListener("DOMContentLoaded", (event) => {
             {% block domready %}
-
             {% endblock %}
         })
     </script>

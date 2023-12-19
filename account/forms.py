@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfile
+from .models import UserProfile, Interest
 from datetime import date
 
 
@@ -68,6 +68,15 @@ class InterestsForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['interests']
+        widgets = {'interests': forms.CheckboxSelectMultiple()}
+
+    def clean_interests(self):
+        interests = self.cleaned_data['interests']
+        if len(interests) < 5:
+            raise forms.ValidationError('Choose at least 5 interests.')
+        if len(interests) > 10:
+            raise forms.ValidationError('Choose less than 10 interests.')
+        return self.cleaned_data['interests']
 
 
 class UserSettingsForm(forms.ModelForm):

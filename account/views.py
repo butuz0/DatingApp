@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
 from .forms import UserRegistrationForm, ProfileRegistrationForm, LoginForm, RelationshipForm, InterestsForm, \
     UserSettingsForm, ProfileSettingsForm
-from .models import UserProfile
+from .models import UserProfile, GroupOfInterests
 
 
 # Create your views here.
@@ -43,7 +43,7 @@ def profile_registration(request):
                                                  gender_preference=cd['gender_preference'],
                                                  about_me=cd['about_me'])
             profile.save()
-            return redirect(reverse('account:relationship_type_form'))
+            return redirect(reverse('account:relationship_form'))
     else:
         form = ProfileRegistrationForm()
     return render(request, 'account/profile_register.html', {'form': form})
@@ -70,7 +70,8 @@ def interests_form(request):
             return render(request, 'account/registration_done.html')
     else:
         form = InterestsForm()
-    return render(request, 'account/interests_form.html', {'form': form})
+    groups = GroupOfInterests.objects.all()
+    return render(request, 'account/interests_form.html', {'form': form, 'groups': groups})
 
 
 @login_required

@@ -6,32 +6,78 @@
     Your best match
 {% endblock %}
 
+{% block styles_link %}
+    {% static "people/css/people_list.css" %}
+{% endblock %}
+
 {% block content %}
-    <div>
-        <h2>Your best match for today is:</h2>
-        <div style="display: flex; flex-direction: row">
-            <div style="padding-right: 3rem">
-                <a href="{% url 'people:user_detail' best_match.user.username %}">
-                    {% if best_match.photo %}
-                        <img src="{% thumbnail best_match.photo '180x180' crop='smart' %}" alt="">
-                    {% else %}
-                        <img src="{% static 'img/no_image.png' %}" alt="">
-                    {% endif %}
-                </a>
+    <div style="overflow-y: scroll">
+        <h1>Your best match for today</h1>
+        <div class="top_section">
+            <div class="profile_picture">
+                {% if person.photo %}
+                    <img src="{% thumbnail person.photo '650x650' crop='smart' %}" alt="">
+                {% else %}
+                    <img src="{% static 'img/no_image.png' %}" alt="">
+                {% endif %}
             </div>
-            <div>
-                <p>
-                    <a href="{% url 'people:user_detail' best_match.user.username %}">
-                        {{ best_match.user.first_name }} {{ best_match.user.last_name }},
-                        {{ best_match.years_old }} years old.
-                    </a><br>
-                    Is {{ best_match.get_gender_display }}, (likes {{ best_match.get_gender_preference_display }})<br>
-                    Looking for: {{ best_match.get_relationship_display }}<br>
-                </p>
-                {% for interest in best_match.interests.all %}
-                    {{ interest }};
+            <div class="image_buttons">
+                <div class="image_button">
+                    <a href="{% url 'people:user_detail' person.user.username %}">
+                        <div class="image">
+                            {% if person.gender == 'F' %}
+                                <img src="{% static 'img/female_profile.png' %}" alt="">
+                            {% else %}
+                                <img style="width: 45%" src="{% static 'img/male_profile.png' %}" alt="">
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+                <div class="image_button">
+                    <a href="#"
+                       data-id="{{ person.user.id }}"
+                       data-action="{% if request.user in person.user.liked_by.all %}un{% endif %}like"
+                       class="like">
+                        <div class="image">
+                            <img src="{% static 'img/like_button.png' %}" alt="">
+                        </div>
+                    </a>
+                </div>
+                <div class="image_button">
+                    <a href="{% url 'conversations:conversation_detail' person.user.id %}">
+                        <div class="image">
+                            <img src="{% static 'img/chat_button.png' %}" alt="">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="person_info">
+            <h3>
+                {{ person.user.first_name }} {{ person.user.last_name }}, {{ person.years_old }} y.o.
+            </h3>
+            <p>
+                Looking for <strong>{{ person.get_relationship_display }}</strong>
+            </p>
+            <div class="person_interests">
+                {% for interest in person.interests.all %}
+                    <div class="interest" style="background-color: {{ interest.group.background_color }}">
+                        {{ interest }}
+                    </div>
                 {% endfor %}
             </div>
+            {% if person.about_me %}
+                <p class="about_me">
+                    {{ person.about_me }}
+                </p>
+            {% endif %}
         </div>
     </div>
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[3].classList.add("selected");
+    {% endblock %}
+</script>

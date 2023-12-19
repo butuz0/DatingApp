@@ -79,5 +79,34 @@
     {% block domready %}
         const navbar = document.getElementsByClassName("button");
         navbar[3].classList.add("selected");
+
+        const url = "{% url 'people:like_user' %}";
+        let options = {
+            method: "POST",
+            headers: {'X-CSRFToken': csrftoken},
+            mode: "same-origin"
+        }
+
+        if (document.querySelector("a.like")) {
+            document.querySelector("a.like").addEventListener("click", function (e) {
+                e.preventDefault();
+                let likeButton = this;
+                document.querySelectorAll("div.image_button")[1].classList.toggle("liked");
+
+                let formData = new FormData();
+                formData.append("id", likeButton.dataset.id);
+                formData.append("action", likeButton.dataset.action);
+                options["body"] = formData;
+
+                fetch(url, options)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data["status"] === "ok") {
+                            let previousAction = likeButton.dataset.action;
+                            likeButton.dataset.action = previousAction === "like" ? "unlike" : "like";
+                        }
+                    });
+            });
+        }
     {% endblock %}
 </script>

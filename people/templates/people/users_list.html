@@ -69,9 +69,11 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <p class="about_me">
-                        {{ person.about_me }}
-                    </p>
+                    {% if person.about_me %}
+                        <p class="about_me">
+                            {{ person.about_me }}
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}

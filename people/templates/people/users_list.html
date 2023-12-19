@@ -16,13 +16,11 @@
             <div class="person">
                 <div class="top_section">
                     <div class="profile_picture">
-                        <a href="{% url 'people:user_detail' person.user.username %}">
-                            {% if person.photo %}
-                                <img src="{% thumbnail person.photo '650x650' crop='smart' %}" alt="">
-                            {% else %}
-                                <img src="{% static 'img/no_image.png' %}" alt="">
-                            {% endif %}
-                        </a>
+                        {% if person.photo %}
+                            <img src="{% thumbnail person.photo '650x650' crop='smart' %}" alt="">
+                        {% else %}
+                            <img src="{% static 'img/no_image.png' %}" alt="">
+                        {% endif %}
                     </div>
                     <div class="image_buttons">
                         <div class="image_button">

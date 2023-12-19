@@ -139,6 +139,35 @@ input[type="radio"] {
     cursor: pointer;
 }
 
+#interests_page h3 {
+    margin: 15px 0 0;
+    width: 100%;
+    text-align: left;
+}
+
+.all_interests {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.interest {
+    width: fit-content;
+    min-width: 10%;
+    border: 1px solid grey;
+    border-radius: 5px;
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+    text-align: center;
+}
+
+.interest input {
+    display: none;
+}
+
+.interest label {
+    cursor: pointer;
+}
 
 /*.social li.facebook {*/
 /*    background: #3b5399;*/

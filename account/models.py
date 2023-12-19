@@ -40,7 +40,7 @@ class UserProfile(models.Model):
     date_of_birth = models.DateField(null=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d/', null=True)
     gender_preference = models.CharField(max_length=4, choices=Gender.choices, null=True)
-    about_me = models.TextField(null=True)
+    about_me = models.TextField(null=True, max_length=250)
     relationship = models.CharField(max_length=6, choices=Relationship.choices, null=True)
     interests = models.ManyToManyField(Interest)
 

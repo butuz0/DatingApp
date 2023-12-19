@@ -1,14 +1,53 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load account_extras %}
 
 {% block title %}
     Choose your Interests
 {% endblock %}
 
-{% block content %}
-    <p>Please pick from 5 to 10 of your interests</p>
-    <form action="" method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Continue">
-    </form>
+{% block styles_link %}
+    {% static 'account/css/registration.css' %}
 {% endblock %}
+
+{% block content %}
+    <div id="interests_page">
+        <h1>Your Interests</h1>
+        <p>Please pick from 5 to 10 of your interests</p>
+
+        <form action="" method="post">
+            {% csrf_token %}
+            {% for group in groups %}
+                <h3>{{ group.name }}</h3>
+                <div class="all_interests">
+                    {% for interest in form.interests %}
+                        {% if interest|interest_to_str in group.interests|get_qs_values:'name' %}
+                            <div class="interest" onclick="toggleCheckbox(this, '{{ group.background_color }}')">
+                                {{ interest }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            <input class="form_submit" type="submit" value="Create Profile">
+        </form>
+    </div>
+    <script src="{% static 'account/js/interests_template.js' %}"></script>
+{% endblock %}
+
+<script>
+    {% block domready %}
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+        }
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+</script>

@@ -14,38 +14,105 @@
     <div>
         {% for person in people %}
             <div class="person">
-                <div class="person_info">
-                    <div>
+                <div class="top_section">
+                    <div class="profile_picture">
                         <a href="{% url 'people:user_detail' person.user.username %}">
                             {% if person.photo %}
-                                <img src="{% thumbnail person.photo '180x180' crop='smart' %}" alt="">
-                                {#<img src="{{ person.photo.url }}" alt="">#}
+                                <img src="{% thumbnail person.photo '650x650' crop='smart' %}" alt="">
                             {% else %}
                                 <img src="{% static 'img/no_image.png' %}" alt="">
                             {% endif %}
                         </a>
                     </div>
-                    <div>
-                        <p>
+                    <div class="image_buttons">
+                        <div class="image_button">
                             <a href="{% url 'people:user_detail' person.user.username %}">
-                                {{ person.user.first_name }} {{ person.user.last_name }},
-                                {{ person.years_old }} years old.
-                            </a><br>
-                            Is {{ person.get_gender_display }}, (likes {{ person.get_gender_preference_display }})<br>
-                            Looking for: {{ person.get_relationship_display }}<br>
-                        </p>
+                                <div class="image">
+                                    {% if person.gender == 'F' %}
+                                        <img src="{% static 'img/female_profile.png' %}" alt="">
+                                    {% else %}
+                                        <img style="width: 45%" src="{% static 'img/male_profile.png' %}" alt="">
+                                    {% endif %}
+                                </div>
+                            </a>
+                        </div>
+                        <div class="image_button">
+                            <a href="#"
+                               data-id="{{ person.user.id }}"
+                               data-action="{% if request.user in person.user.liked_by.all %}un{% endif %}like"
+                               class="like">
+                                <div class="image">
+                                    <img src="{% static 'img/like_button.png' %}" alt="">
+                                </div>
+                            </a>
+                        </div>
+                        <div class="image_button">
+                            <a href="{% url 'conversations:conversation_detail' person.user.id %}">
+                                <div class="image">
+                                    <img src="{% static 'img/chat_button.png' %}" alt="">
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="person_info">
+                    <h3>
+                        {{ person.user.first_name }} {{ person.user.last_name }}, {{ person.years_old }} y.o.
+                    </h3>
+                    <p>
+                        Looking for <strong>{{ person.get_relationship_display }}</strong>
+                    </p>
+                    <div class="person_interests">
                         {% for interest in person.interests.all %}
-                            {{ interest }};
+                            <div class="interest" style="background-color: {{ interest.group.background_color }}">
+                                {{ interest }}
+                            </div>
                         {% endfor %}
                     </div>
+                    <p class="about_me">
+                        {{ person.about_me }}
+                    </p>
                 </div>
             </div>
         {% endfor %}
     </div>
 {% endblock %}
+
 <script>
     {% block domready %}
         const navbar = document.getElementsByClassName("button");
         navbar[0].classList.add("selected");
+
+        const url = "{% url 'people:like_user' %}";
+        let options = {
+            method: "POST",
+            headers: {'X-CSRFToken': csrftoken},
+            mode: "same-origin"
+        }
+        if (document.querySelector("div.person")) {
+            people = document.querySelectorAll("div.person");
+            for (let i = 0; i < people.length; i++) {
+                people[i].querySelector("a.like").addEventListener("click", function (e) {
+                    e.preventDefault();
+                    let likeButton = this;
+                    people[i].querySelectorAll("div.image_button")[1].classList.toggle("liked");
+
+
+                    let formData = new FormData();
+                    formData.append("id", likeButton.dataset.id);
+                    formData.append("action", likeButton.dataset.action);
+                    options["body"] = formData;
+
+                    fetch(url, options)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data["status"] === "ok") {
+                                let previousAction = likeButton.dataset.action;
+                                likeButton.dataset.action = previousAction === "like" ? "unlike" : "like";
+                            }
+                        });
+                });
+            }
+        }
     {% endblock %}
 </script>

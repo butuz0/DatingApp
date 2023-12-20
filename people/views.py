@@ -25,6 +25,13 @@ def list_people(request):
     if current_user.gender_preference != 'BOTH':
         people = people.exclude(gender=current_user.gender)
 
+    # exclude people who were already liked by user
+    liked_people = [like.user_to for like in Like.objects.filter(user_from=request.user)]
+    people = people.exclude(user__in=liked_people)
+
+    # random shuffle
+    people = people.order_by('?')
+
     return render(request, 'people/users_list.html', {'current_user': current_user,
                                                       'people': people})
 
@@ -47,9 +54,6 @@ def like_user(request):
             user = User.objects.get(id=user_id)
             if action == 'like':
                 like = Like.objects.get_or_create(user_from=request.user, user_to=user)[0]
-                if like.match():
-                    messages.success(request, 'Its a match!')
-
             else:
                 Like.objects.filter(user_from=request.user, user_to=user).delete()
             return JsonResponse({'status': 'ok'})
@@ -89,7 +93,7 @@ def find_best_match(request):
         # if less then 24 hours have passed since last time, show previously found person
         if time_passed.total_seconds() < 60 * 60 * 24:
             best_match = UserProfile.objects.get(user_id=request.session['best_score_user_id'])
-            return render(request, 'people/best_match.html', {'best_match': best_match})
+            return render(request, 'people/best_match.html', {'person': best_match})
 
     current_user = request.user.user_info
 
@@ -120,8 +124,12 @@ def find_best_match(request):
     people = (UserProfile.objects.filter(gender_preference__in=[current_user.gender, 'BOTH'])
               .filter(relationship=current_user.relationship)
               .exclude(user=request.user))
+
     if current_user.gender_preference != 'BOTH':
         people = people.exclude(gender=current_user.gender)
+
+    liked_people = [like.user_to for like in Like.objects.filter(user_from=request.user)]
+    people = people.exclude(user__in=liked_people)
 
     # score evaluation for every person, sort by score value from highest
     people_scores = {person.user.id: get_score(person) for person in people}
@@ -136,7 +144,7 @@ def find_best_match(request):
 
     best_match = UserProfile.objects.get(user_id=best_score_user_id)
 
-    return render(request, 'people/best_match.html', {'best_match': best_match})
+    return render(request, 'people/best_match.html', {'person': best_match})
 
 
 @login_required

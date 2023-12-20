@@ -1,60 +1,111 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load thumbnail %}
 
 {% block title %}
     {{ user.username }} profile
 {% endblock %}
 
 {% block styles_link %}
-    {% static "people/css/profile_details.css" %}
+    {% static "people/css/people_list.css" %}
 {% endblock %}
 
 {% block content %}
     <div class="profile_info">
-        {% if user.user_info.photo %}
-            <img src="{{ user.user_info.photo.url }}" alt="">
-        {% else %}
-            <img src="{% static 'img/no_image.png' %}" alt="">
-        {% endif %}
         <h1>{{ user.first_name }} {{ user.last_name }}</h1>
-        <p>{{ user.user_info.gender }}, {{ user.user_info.years_old }} years old</p>
-        <p>Looking for: {{ user.user_info.get_relationship_display }}</p>
-        <p>
-            Interests:<br>
-            {% for interest in user.user_info.interests.all %}
-                {{ interest }};
-            {% endfor %}
+        <div class="top_section">
+            <div class="profile_picture">
+                {% if user.user_info.photo %}
+                    <img src="{% thumbnail user.user_info.photo '650x650' crop='smart' %}" alt="">
+                {% else %}
+                    <img src="{% static 'img/no_image.png' %}" alt="">
+                {% endif %}
+            </div>
+            <div class="image_buttons">
+                {% if user != request.user %}
+                    <div class="image_button  {% if request.user in user.liked_by.all %}liked{% endif %}">
+                        <a href="#"
+                           data-id="{{ user.id }}"
+                           data-action="{% if request.user in user.liked_by.all %}un{% endif %}like"
+                           class="like">
+                            <div class="image">
+                                <img src="{% static 'img/like_button.png' %}" alt="">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="image_button">
+                        <a href="{% url 'conversations:conversation_detail' user.id %}">
+                            <div class="image">
+                                <img src="{% static 'img/chat_button.png' %}" alt="">
+                            </div>
+                        </a>
+                    </div>
+                    <div class="image_button">
+                        <a href="{% url 'people:report_user' user.id %}">
+                            <div class="image">
+                                <img src="{% static 'img/report_button.png' %}" alt="">
+                                Report
+                            </div>
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="image_button">
+                        <a href="{% url 'people:create_post' user.username %}">
+                            <div class="image">
+                                <img style="width: 50%" src="{% static 'img/new_post.png' %}" alt="">
+                                New<br>post
+                            </div>
+                        </a>
+                    </div>
+                    <div class="image_button">
+                        <a href="{% url 'people:report_user' user.id %}">
+                            <div class="image">
+                                <img style="width: 50%" src="{% static 'img/edit_profile.png' %}" alt="">
+                                Edit
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
 
-        </p>
-        <p>{{ user.user_info.about_me }}</p>
-    </div>
-    
-    {% if user != request.user %}
-        <a href="#"
-           data-id="{{ user.id }}"
-           data-action="{% if request.user in user.liked_by.all %}un{% endif %}like"
-           class="like">
-            {% if request.user not in user.liked_by.all %}
-                like
-            {% else %}
-                unlike
+            </div>
+        </div>
+        <div class="person_info">
+            <h3>
+                {{ user.first_name }} {{ user.last_name }}, {{ user.user_info.years_old }} y.o.
+            </h3>
+            <p>
+                Likes <strong>{{ user.user_info.get_gender_preference_display }}</strong>
+            </p>
+            <p>
+                Looking for <strong>{{ user.user_info.get_relationship_display }}</strong>
+            </p>
+            <div class="person_interests">
+                {% for interest in user.user_info.interests.all %}
+                    <div class="interest" style="background-color: {{ interest.group.background_color }}">
+                        {{ interest }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% if user.user_info.about_me %}
+                <p class="about_me">
+                    {{ user.user_info.about_me }}
+                </p>
             {% endif %}
-        </a><br>
-        <a href="{% url 'conversations:conversation_detail' user.id %}">Contact Me!</a>
-        <a href="{% url 'people:report_user' user.id %}">Report</a>
-    {% else %}
-        <a href="{% url 'people:create_post' user.username %}">New Post</a>
+        </div>
+    </div>
+    {% if posts %}
+        <div class="separator">{{ user.first_name }}'s blog</div>
+        {% for post in posts %}
+            <div class="blog_post">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="">
+                {% endif %}
+                <p class="post_text">{{ post.text }}</p>
+                <p class="post_created">{{ post.created }}</p>
+            </div>
+        {% endfor %}
     {% endif %}
 
-    {% for post in posts %}
-        <hr/>
-        <div class="blog_post">
-            {% if post.image %}
-                <img src="{{ post.image.url }}" alt="">
-            {% endif %}
-            <p>{{ post.text }}</p>
-        </div>
-    {% endfor %}
 {% endblock %}
 
 <script>
@@ -76,6 +127,7 @@
             document.querySelector("a.like").addEventListener("click", function (e) {
                 e.preventDefault();
                 let likeButton = this;
+                likeButton.parentElement.classList.toggle("liked");
 
                 let formData = new FormData();
                 formData.append("id", likeButton.dataset.id);
@@ -87,9 +139,7 @@
                     .then(data => {
                         if (data["status"] === "ok") {
                             let previousAction = likeButton.dataset.action;
-                            let action = previousAction === "like" ? "unlike" : "like";
-                            likeButton.dataset.action = action;
-                            likeButton.innerHTML = action;
+                            likeButton.dataset.action = previousAction === "like" ? "unlike" : "like";
                         }
                     });
             });

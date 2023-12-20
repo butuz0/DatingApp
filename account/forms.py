@@ -86,6 +86,8 @@ class UserSettingsForm(forms.ModelForm):
 
 
 class ProfileSettingsForm(forms.ModelForm):
+    date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
+
     class Meta:
         model = UserProfile
         fields = ['gender', 'date_of_birth', 'gender_preference',

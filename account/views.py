@@ -98,7 +98,6 @@ def delete_account(request):
         user = request.user
         print(f'user to delete: {user}')
         # user.delete()
-        messages.success(request, 'Your account has been deleted.')
-        return redirect('people:list_people')  # Redirect to the home page or another appropriate page
+        return redirect('home_page')
 
     return render(request, 'account/delete_account.html')

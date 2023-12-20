@@ -33,7 +33,7 @@
                         </div>
                     </a>
                 </div>
-                <div class="image_button">
+                <div class="image_button {% if request.user in person.user.liked_by.all %}liked{% endif %}">
                     <a href="#"
                        data-id="{{ person.user.id }}"
                        data-action="{% if request.user in person.user.liked_by.all %}un{% endif %}like"

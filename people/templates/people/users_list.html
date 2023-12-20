@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block styles_link %}
-    {% static "people/css/people_list.css" %}
+    {% static "people/css/profile_details.css" %}
 {% endblock %}
 
 {% block content %}
@@ -95,8 +95,7 @@
                 people[i].querySelector("a.like").addEventListener("click", function (e) {
                     e.preventDefault();
                     let likeButton = this;
-                    people[i].querySelectorAll("div.image_button")[1].classList.toggle("liked");
-
+                    likeButton.parentElement.classList.toggle("liked");
 
                     let formData = new FormData();
                     formData.append("id", likeButton.dataset.id);

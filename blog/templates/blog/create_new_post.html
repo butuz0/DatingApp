@@ -1,13 +1,22 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load account_extras %}
 
 {% block title %}
     New Post
 {% endblock %}
 
+{% block styles_link %}
+    {% static 'blog/css/new_post.css' %}
+{% endblock %}
+
 {% block content %}
+    <h1>Create new post</h1>
+    <p>Create new post using the form below</p>
     <form action="" method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add new post">
+        {{ form.image }}
+        {{ form.text|add_attr:'placeholder:What`s new?' }}
+        <input class="form_submit" type="submit" value="Add new post">
     </form>
 {% endblock %}

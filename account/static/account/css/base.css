@@ -71,7 +71,8 @@ nav {
     background-size: 200% auto;
     color: white;
     border-radius: 6px;
-    background-image: linear-gradient(to right, #fbc2eb 0%, #a6c1ee 51%, #fbc2eb 100%);
+    border: 2px solid #ccc;
+    background-image: linear-gradient(to right, #f18eca 0%, #75a2f8 51%, #f18eca 100%);
 }
 
 .selected {

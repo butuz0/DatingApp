@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('account/', include('account.urls', namespace='account')),
     path('people/', include('people.urls', namespace='people')),
+    path('blog/', include('blog.urls', namespace='blog')),
     path('conversations/', include('conversations.urls', namespace='conversations')),
     path('social-auth/', include('social_django.urls', namespace='social')),
     path('', views.home_page, name='home_page'),

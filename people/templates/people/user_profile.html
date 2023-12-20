@@ -50,7 +50,7 @@
                     </div>
                 {% else %}
                     <div class="image_button">
-                        <a href="{% url 'people:create_post' user.username %}">
+                        <a href="{% url 'blog:create_post' %}">
                             <div class="image">
                                 <img style="width: 50%" src="{% static 'img/new_post.png' %}" alt="">
                                 New<br>post
@@ -58,7 +58,7 @@
                         </a>
                     </div>
                     <div class="image_button">
-                        <a href="{% url 'people:report_user' user.id %}">
+                        <a href="{% url 'blog:edit_blog' %}">
                             <div class="image">
                                 <img style="width: 50%" src="{% static 'img/edit_profile.png' %}" alt="">
                                 Edit

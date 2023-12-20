@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Blog edit
+{% endblock %}
+
+{% block styles_link %}
+    {% static "people/css/profile_details.css" %}
+{% endblock %}
+
+{% block content %}
+    <div class="edit_blog">
+        {% if posts %}
+            <h1>Your blog</h1>
+            {% for post in posts %}
+                <div class="blog_post">
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="">
+                    {% endif %}
+                    <p class="post_text">{{ post.text }}</p>
+                    <p class="post_created">{{ post.created }}</p>
+                </div>
+                <button>
+                    <a href="{% url 'blog:delete_post' post.id %}">Delete</a>
+                </button>
+            {% endfor %}
+        {% else %}
+            <h2>You do not have any posts yet.<br>
+                <a href="{% url 'people:user_detail' username %}">Back to profile</a>
+            </h2>
+        {% endif %}
+    </div>
+{% endblock %}

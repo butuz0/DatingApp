@@ -85,7 +85,6 @@ def user_settings(request):
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
-            messages.success(request, 'Your settings have been updated successfully.')
             return redirect('account:settings')
 
     return render(request, 'account/settings.html', {'user_form': user_form,
@@ -96,7 +95,6 @@ def user_settings(request):
 def delete_account(request):
     if request.method == 'POST':
         user = request.user
-        print(f'user to delete: {user}')
         # user.delete()
         return redirect('home_page')
 

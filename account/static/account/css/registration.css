@@ -65,29 +65,6 @@ textarea {
     background-image: linear-gradient(to right, #63ffa9, #57e160, #42ff00);
 }
 
-.separator {
-    display: flex;
-    align-items: center;
-    text-align: center;
-    margin: 1% 0;
-    width: 50%;
-}
-
-.separator::before,
-.separator::after {
-    content: "";
-    flex: 1;
-    border-bottom: 1px solid #000;
-}
-
-.separator:not(:empty)::before {
-    margin-right: .25em;
-}
-
-.separator:not(:empty)::after {
-    margin-left: .25em;
-}
-
 input[type="file"] {
     font-size: 14px;
 }

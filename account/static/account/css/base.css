@@ -81,3 +81,34 @@ nav {
 .button:hover {
     background-position: right center;
 }
+
+h1 {
+    text-align: center;
+    background: -webkit-linear-gradient(#723fe5, #4d7de5);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.separator {
+    font-size: x-large;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 7% 0 5%;
+    width: 100%;
+}
+
+.separator::before,
+.separator::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #000;
+}
+
+.separator:not(:empty)::before {
+    margin-right: .25em;
+}
+
+.separator:not(:empty)::after {
+    margin-left: .25em;
+}

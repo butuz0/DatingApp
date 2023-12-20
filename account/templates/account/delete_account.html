@@ -1,14 +1,20 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}
     Delete Account
 {% endblock %}
 
+{% block styles_link %}
+    {% static 'account/css/registration.css' %}
+{% endblock %}
+
 {% block content %}
-    <h2>Delete Account</h2>
+    <h2 style="text-align: center">Delete Account</h2>
     <p>Are you sure you want to delete your account?</p>
     <form method="post">
-    {% csrf_token %}
-    <input type="submit" value="Yes, delete my account">
+        {% csrf_token %}
+        <input style="background-color: red" type="submit" value="Yes, delete my account">
+    </form>
     <br>
-    <a href="{% url 'account:settings' %}">Go back to User Settings</a>
+    <p><a href="{% url 'account:settings' %}">Go back to User Settings</a></p>
 {% endblock %}

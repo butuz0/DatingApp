@@ -1,20 +1,112 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load account_extras %}
 
 {% block title %}
     Settings
 {% endblock %}
 
-{% block content %}
-    <h2>User Settings</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ user_form.as_p }}
-        {{ profile_form.as_p }}
-        <button type="submit">Save Changes</button>
-    </form>
-    <br>
-    <button style="background-color: red; color: white">
-        <a href="{% url 'account:delete_account' %}">Delete Account</a>
-    </button>
-
+{% block styles_link %}
+    {% static 'account/css/settings.css' %}
 {% endblock %}
+
+{% block content %}
+    <div id="settings">
+        <h1>User Settings</h1>
+        <form method="post">
+            {% csrf_token %}
+            <h3>Account settings</h3>
+            <table title="Account settings">
+                <tr>
+                    <td>First name</td>
+                    <td>{{ user_form.first_name }}</td>
+                </tr>
+                <tr>
+                    <td>First name</td>
+                    <td>{{ user_form.last_name }}</td>
+                </tr>
+                <tr>
+                    <td>Username</td>
+                    <td>{{ user_form.username }}</td>
+                </tr>
+                <tr>
+                    <td>Email</td>
+                    <td>{{ user_form.email }}</td>
+                </tr>
+                <tr>
+                    <td>Password</td>
+                    <td>{{ user_form.password }}</td>
+                </tr>
+            </table>
+            <h3>Profile settings</h3>
+            <table>
+                <tr>
+                    <td>Photo</td>
+                    <td class="photo">{{ profile_form.photo }}</td>
+                </tr>
+                <tr>
+                    <td>About me</td>
+                    <td style="text-align: left;">{{ profile_form.about_me }}</td>
+                </tr>
+                <tr>
+                    <td>Gender</td>
+                    <td>{{ profile_form.gender }}</td>
+                </tr>
+                <tr>
+                    <td>Birthday</td>
+                    <td>{{ profile_form.date_of_birth }}</td>
+                </tr>
+                <tr>
+                    <td>Preference</td>
+                    <td>{{ profile_form.gender_preference }}</td>
+                </tr>
+                <tr>
+                    <td>Relationship</td>
+                    <td>{{ profile_form.relationship }}</td>
+                </tr>
+                <tr>
+                    <td>Interests</td>
+                    <td>{{ profile_form.interests }}</td>
+                </tr>
+            </table>
+            <input class="form_submit" type="submit" value="Save">
+        </form>
+        <br>
+        <div style="text-align: center">
+            <button class="settings_button">
+                <a href="{% url 'account:logout' %}">Log out</a>
+            </button>
+            <button class="settings_button" style="background-color: red">
+                <a href="{% url 'account:delete_account' %}">Delete Account</a>
+            </button>
+        </div>
+
+    </div>
+{% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[5].classList.add("selected");
+        const photoField = document.querySelector("td.photo");
+        const fileInput = document.querySelector("input[type='file']");
+
+        photoField.innerHTML = null;
+        photoField.appendChild(fileInput);
+
+        {% if user_form.errors %}
+            {% for field, errors in user_form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        {% if profile_form.errors %}
+            {% for field, errors in profile_form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+</script>

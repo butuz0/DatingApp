@@ -23,7 +23,7 @@ def list_people(request):
               .exclude(user=request.user))
 
     if current_user.gender_preference != 'BOTH':
-        people = people.exclude(gender=current_user.gender)
+        people = people.filter(gender=current_user.gender_preference)
 
     # exclude people who were already liked by user
     liked_people = [like.user_to for like in Like.objects.filter(user_from=request.user)]

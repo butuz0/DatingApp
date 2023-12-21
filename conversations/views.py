@@ -14,8 +14,7 @@ from .forms import CreateMessageForm
 def all_conversations(request):
     conversations = Conversation.objects.filter(users__in=[request.user.id])
     return render(request, 'conversations/all_conversations.html',
-                  context={'conversations': conversations,
-                           'unread_messages_counts': unread_messages_counts})
+                  context={'conversations': conversations})
 
 
 @login_required

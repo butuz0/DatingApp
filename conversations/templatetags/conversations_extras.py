@@ -1,13 +1,12 @@
 from django import template
+from django.db.models import Q
+from conversations.models import Message
 
 register = template.Library()
 
 
 @register.filter
-def index(sequence, position):
-    return sequence[position]
-
-
-@register.filter
-def last_index(sequence):
-    return sequence[len(sequence) - 1]
+def unread_messages_count(conversation, user):
+    return (Message.objects
+            .filter(conversation=conversation, message_read=False)
+            .filter(~Q(created_by=user)).count())

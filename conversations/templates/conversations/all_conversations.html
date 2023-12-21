@@ -20,7 +20,6 @@
                     <div class="conversation">
                         {% if user.user_info.photo %}
                             <img src="{% thumbnail user.user_info.photo '180x180' crop='smart' %}" alt="">
-                            {#                            <img src="{{ person.photo.url }}" alt="">#}
                         {% else %}
                             <img src="{% static 'img/no_image.png' %}" alt="">
                         {% endif %}
@@ -39,7 +38,7 @@
                                 </p>
                             {% endwith %}
                         </div>
-                        {% with unread_messages_counts|index:forloop.counter0 as unread_messages %}
+                        {% with conversation.id|unread_messages_count:request.user as unread_messages %}
                             {% if unread_messages != 0 %}
                                 <p class="unread_messages">{{ unread_messages }}</p>
                             {% endif %}

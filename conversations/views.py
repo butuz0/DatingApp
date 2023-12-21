@@ -13,15 +13,6 @@ from .forms import CreateMessageForm
 @login_required
 def all_conversations(request):
     conversations = Conversation.objects.filter(users__in=[request.user.id])
-
-    unread_messages_counts = []
-    for conversation in conversations:
-        unread_messages = (Message.objects.
-                           filter(conversation=conversation, message_read=False).
-                           filter(~Q(created_by=request.user)).
-                           count())
-        unread_messages_counts.append(unread_messages)
-
     return render(request, 'conversations/all_conversations.html',
                   context={'conversations': conversations,
                            'unread_messages_counts': unread_messages_counts})

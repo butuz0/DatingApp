@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Post edit
+{% endblock %}
+
+{% block styles_link %}
+    {% static 'blog/css/new_post.css' %}
+{% endblock %}
+
+{% block content %}
+    <div class="edit_blog">
+        <h1>Edit your post</h1>
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="photo" style="width: 50%">
+                {{ form.image }}
+            </div>
+            {{ form.text }}
+            <input class="form_submit" type="submit" value="Confirm">
+        </form>
+    </div>
+{% endblock %}
+<script>
+    {% block domready %}
+        const photoField = document.querySelector(".photo");
+        const fileInput = document.querySelector("input[type='file']");
+
+        photoField.innerHTML = null;
+        photoField.appendChild(fileInput);
+    {% endblock %}
+</script>

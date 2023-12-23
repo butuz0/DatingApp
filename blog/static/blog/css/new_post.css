@@ -29,8 +29,10 @@ textarea {
     background-image: linear-gradient(to right, #63ffa9, #57e160, #42ff00);
 }
 
-input[type="file"] {
+.photo input[type="file"] {
     font-size: 14px;
+    border: none;
+    width: 95%;
 }
 
 input {

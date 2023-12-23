@@ -27,8 +27,22 @@ def edit_blog(request):
 
 
 @login_required
+def edit_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    if request.method == 'POST':
+        form = CreatePostForm(request.POST, request.FILES, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('people:user_detail', kwargs={'username': request.user.username}))
+    else:
+        form = CreatePostForm(instance=post)
+    return render(request, 'blog/edit_post.html', {'form': form, 'post': post})
+
+
+@login_required
 def delete_post(request, post_id):
     print(post_id)
     post = Post.objects.get(id=post_id)
     post.delete()
-    return redirect(reverse('people:user_detail', kwargs={'username': request.user.username}))
+    return redirect(reverse('blog:edit_blog'))

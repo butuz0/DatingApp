@@ -128,3 +128,22 @@
     font-size: medium;
     color: grey;
 }
+
+.edit_blog {
+    padding-bottom: 10px;
+}
+
+.edit_blog .blog_post {
+    margin-bottom: 3px;
+}
+
+.edit_blog button a {
+    text-decoration: none;
+    color: black;
+}
+
+.edit_blog button {
+    border-radius: 3px;
+    font-size: medium;
+    border: 1px solid black;
+}

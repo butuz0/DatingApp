@@ -78,8 +78,20 @@ user_model.add_to_class('likes', models.ManyToManyField('self',
 
 
 class Report(models.Model):
+    class ViolationType(models.TextChoices):
+        SPAM = 'spam', 'Spam',
+        FAKE = 'fake', 'Fake Profile',
+        HARASS = 'harass', 'Harassment',
+        HATE = 'hate', 'Hate Speech',
+        SCAM = 'scam', 'Scam',
+        PICTURE = 'picture', 'Inappropriate Picture',
+        UNDERAGE = 'underage', 'Underage User',
+        STALKING = 'stalking', 'Stalking',
+        PROFILE = 'profile', 'Inappropriate Profile'
+
     user_from = models.ForeignKey('auth.User', related_name='user_from', on_delete=models.CASCADE)
     reported_user = models.ForeignKey('auth.User', related_name='reported_user', on_delete=models.CASCADE)
+    report_reason = models.CharField(max_length=10, choices=ViolationType.choices, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

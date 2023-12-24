@@ -92,6 +92,7 @@ class Report(models.Model):
     user_from = models.ForeignKey('auth.User', related_name='user_from', on_delete=models.CASCADE)
     reported_user = models.ForeignKey('auth.User', related_name='reported_user', on_delete=models.CASCADE)
     report_reason = models.CharField(max_length=10, choices=ViolationType.choices, null=True)
+    description = models.TextField(max_length=250, null=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

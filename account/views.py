@@ -99,3 +99,8 @@ def delete_account(request):
         return redirect('home_page')
 
     return render(request, 'account/delete_account.html')
+
+
+@login_required
+def logout_confirm(request):
+    return render(request, 'account/logout_page.html')

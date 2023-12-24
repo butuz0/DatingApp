@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Your best match
+{% endblock %}
+
+{% block styles_link %}
+    {% static "account/css/settings.css" %}
+{% endblock %}
+
+{% block content %}
+    <h1>Log out</h1>
+    <h2 style="text-align: center">Are you sure you want to log out?</h2>
+    <div style="text-align: center; margin: 10px">
+        <button class="settings_button">
+            <a href="{% url 'people:list_people' %}">Cancel</a>
+        </button>
+        <button class="settings_button"
+                style="background-color: red">
+            <a href="{% url 'account:logout' %}">Log out</a>
+        </button>
+    </div>
+{% endblock %}

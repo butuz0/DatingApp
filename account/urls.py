@@ -11,4 +11,5 @@ urlpatterns = [
     path('interests/', views.interests_form, name='interests_form'),
     path('settings/', views.user_settings, name='settings'),
     path('delete_account/', views.delete_account, name='delete_account'),
+    path('logout_confirm', views.logout_confirm, name='logout_confirm'),
 ]

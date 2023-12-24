@@ -95,7 +95,9 @@ class ProfileSettingsForm(forms.ModelForm):
 
 
 class ReportForm(forms.ModelForm):
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter a description if possible'}),
+                                  required=False)
+
     class Meta:
         model = Report
         fields = ['description', 'report_reason']
-        widgets = {'description': forms.Textarea(attrs={'placeholder': 'Enter a description if possible'})}

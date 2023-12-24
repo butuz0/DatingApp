@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 from .forms import CreatePostForm
 from django.urls import reverse
 from .models import Post
@@ -42,7 +43,9 @@ def edit_post(request, post_id):
 
 @login_required
 def delete_post(request, post_id):
-    print(post_id)
-    post = Post.objects.get(id=post_id)
-    post.delete()
-    return redirect(reverse('blog:edit_blog'))
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        post.delete()
+        return redirect(reverse('blog:edit_blog'))
+    else:
+        return render(request, 'blog/delete_post.html', {'post': post})

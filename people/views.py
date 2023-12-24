@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.db.models import Q
 from django.conf import settings
 from account.models import UserProfile, Like, Report
+from account.forms import ReportForm
 from datetime import datetime
 import requests
 import json
@@ -150,5 +151,15 @@ def find_best_match(request):
 @login_required
 def report_user(request, reported_user_id):
     reported_user = User.objects.get(id=reported_user_id)
-    Report.objects.create(user_from=request.user, reported_user=reported_user)
-    return redirect(reverse('people:user_detail', kwargs={'username': reported_user.username}))
+    if request.method == 'POST':
+        form = ReportForm(request.POST)
+        if form.is_valid():
+            report = form.save(commit=False)
+            report.user_from = request.user
+            report.reported_user = reported_user
+            report.save()
+            return redirect(reverse('people:user_detail', kwargs={'username': reported_user.username}))
+    else:
+        form = ReportForm()
+    return render(request, 'people/report_user.html', context={'form': form,
+                                                               'reported_user': reported_user})

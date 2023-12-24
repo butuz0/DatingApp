@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfile, Interest
+from .models import UserProfile, Interest, Report
 from datetime import date
 
 
@@ -92,3 +92,10 @@ class ProfileSettingsForm(forms.ModelForm):
         model = UserProfile
         fields = ['gender', 'date_of_birth', 'gender_preference',
                   'photo', 'about_me', 'relationship', 'interests']
+
+
+class ReportForm(forms.ModelForm):
+    class Meta:
+        model = Report
+        fields = ['description', 'report_reason']
+        widgets = {'description': forms.Textarea(attrs={'placeholder': 'Enter a description if possible'})}

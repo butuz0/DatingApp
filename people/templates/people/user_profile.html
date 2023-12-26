@@ -140,6 +140,8 @@
                             let previousAction = likeButton.dataset.action;
                             likeButton.dataset.action = previousAction === "like" ? "unlike" : "like";
                             likeButton.parentElement.classList.toggle("liked");
+                        } else {
+                            alert("Error when processing your Like. Please refresh page and try again.");
                         }
                     });
             });

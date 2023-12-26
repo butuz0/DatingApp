@@ -95,7 +95,6 @@
                 people[i].querySelector("a.like").addEventListener("click", function (e) {
                     e.preventDefault();
                     let likeButton = this;
-                    likeButton.parentElement.classList.toggle("liked");
 
                     let formData = new FormData();
                     formData.append("id", likeButton.dataset.id);
@@ -108,6 +107,9 @@
                             if (data["status"] === "ok") {
                                 let previousAction = likeButton.dataset.action;
                                 likeButton.dataset.action = previousAction === "like" ? "unlike" : "like";
+                                likeButton.parentElement.classList.toggle("liked");
+                            } else {
+                                alert("Error when processing your Like. Please try again.");
                             }
                         });
                 });

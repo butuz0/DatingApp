@@ -43,6 +43,9 @@ class UserProfile(models.Model):
     about_me = models.TextField(null=True, max_length=250)
     relationship = models.CharField(max_length=6, choices=Relationship.choices, null=True)
     interests = models.ManyToManyField(Interest)
+    last_findme_person = models.ForeignKey('auth.User', related_name='last_findme_person', null=True,
+                                           on_delete=models.SET_NULL)
+    last_findme_time = models.DateTimeField(null=True)
 
     def __str__(self):
         return f'Profile of {self.user.username}'

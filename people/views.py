@@ -10,6 +10,7 @@ from django.conf import settings
 from account.models import UserProfile, Like, Report
 from account.forms import ReportForm
 from datetime import datetime
+from django.utils import timezone
 import requests
 import json
 
@@ -84,19 +85,17 @@ def find_best_match(request):
         exact same interest = 10 points
         interests from same categories = 5 points
     """
-    date_format = '%d/%m/%y %H:%M:%S'
+    current_user = request.user.user_info
 
-    # check if user already used FindMe function during last 24 hours
-    if 'best_score_user_id' in request.session:
-        last_time_used = datetime.strptime(request.session['last_time_used'], date_format)
-        time_passed = datetime.now() - last_time_used
+    # # check if user already used FindMe function during last 24 hours
+    if current_user.last_findme_person is not None:
+        time_passed = timezone.now() - current_user.last_findme_time
+        print(time_passed)
 
         # if less then 24 hours have passed since last time, show previously found person
         if time_passed.total_seconds() < 60 * 60 * 24:
-            best_match = UserProfile.objects.get(user_id=request.session['best_score_user_id'])
+            best_match = UserProfile.objects.get(user_id=current_user.last_findme_person.id)
             return render(request, 'people/best_match.html', {'person': best_match})
-
-    current_user = request.user.user_info
 
     # evaluation function
     def get_score(person):
@@ -137,11 +136,14 @@ def find_best_match(request):
     people_sorted = [person for person, score in sorted(people_scores.items(), key=lambda x: x[1], reverse=True)]
 
     # save user id with best score and FindMe function time of usage in Cookies
-    best_score_user_id = people_sorted[0]
-    request.session['best_score_user_id'] = best_score_user_id
+    if current_user.last_findme_person.id != people_sorted[0]:
+        best_score_user_id = people_sorted[0]
+    else:
+        best_score_user_id = people_sorted[1]
 
-    current_time = datetime.now().strftime(date_format)
-    request.session['last_time_used'] = str(current_time)
+    current_user.last_findme_person = User.objects.get(id=best_score_user_id)
+    current_user.last_findme_time = timezone.now()
+    current_user.save()
 
     best_match = UserProfile.objects.get(user_id=best_score_user_id)
 

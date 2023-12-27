@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.http import HttpResponse
-from .forms import UserRegistrationForm, ProfileRegistrationForm, LoginForm, RelationshipForm, InterestsForm, \
+from .forms import UserRegistrationForm, ProfileRegistrationForm, RelationshipForm, InterestsForm, \
     UserSettingsForm, ProfileSettingsForm
 from .models import UserProfile, GroupOfInterests
 

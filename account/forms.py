@@ -50,11 +50,6 @@ class ProfileRegistrationForm(forms.ModelForm):
         return self.cleaned_data['date_of_birth']
 
 
-class LoginForm(forms.Form):
-    username = forms.CharField(max_length=30)
-    password = forms.CharField(widget=forms.PasswordInput)
-
-
 class RelationshipForm(forms.ModelForm):
     relationship = forms.ChoiceField(choices=UserProfile.Relationship.choices,
                                      widget=forms.RadioSelect, required=True)

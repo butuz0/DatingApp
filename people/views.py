@@ -90,7 +90,6 @@ def find_best_match(request):
     # # check if user already used FindMe function during last 24 hours
     if current_user.last_findme_person is not None:
         time_passed = timezone.now() - current_user.last_findme_time
-        print(time_passed)
 
         # if less then 24 hours have passed since last time, show previously found person
         if time_passed.total_seconds() < 60 * 60 * 24:

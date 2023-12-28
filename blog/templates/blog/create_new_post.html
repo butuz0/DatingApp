@@ -20,3 +20,10 @@
         <input class="form_submit" type="submit" value="Add new post">
     </form>
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[4].classList.add("selected");
+    {% endblock %}
+</script>

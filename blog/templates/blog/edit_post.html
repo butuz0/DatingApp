@@ -24,6 +24,9 @@
 {% endblock %}
 <script>
     {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[4].classList.add("selected");
+
         const photoField = document.querySelector(".photo");
         const fileInput = document.querySelector("input[type='file']");
 

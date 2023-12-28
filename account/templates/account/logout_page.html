@@ -22,3 +22,10 @@
         </button>
     </div>
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[6].classList.add("selected");
+    {% endblock %}
+</script>

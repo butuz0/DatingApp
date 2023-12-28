@@ -2,8 +2,8 @@ from account.models import GroupOfInterests, Interest
 
 INTERESTS = {
     'Sports': ['Basketball', 'Football', 'Tennis', 'Soccer', 'Volleyball',
-               'Golf', 'Table Tennis', 'Badminton', 'Swimming', 'Running'],
-    'Outdoor Activities': ['Hiking', 'Camping', 'Cycling', 'Skiing', 'Snowboarding',
+               'Golf', 'Table Tennis', 'Badminton', 'Swimming'],
+    'Outdoor Activities': ['Hiking', 'Camping', 'Skiing', 'Snowboarding',
                            'Surfing', 'Rock Climbing', 'Kayaking', 'Fishing', 'Gardening'],
     'Music': ['Playing Instruments', 'Singing', 'Listening to Pop', 'Rock Music Enthusiast',
               'Jazz Aficionado', 'Classical Music Lover', 'Electronic Dance Music (EDM)',

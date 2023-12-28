@@ -47,6 +47,8 @@
                 </a>
             {% endif %}
         {% endfor %}
+    {% empty %}
+        <h2 style="text-align: center">You did not have any conversations</h2>
     {% endfor %}
 {% endblock %}
 

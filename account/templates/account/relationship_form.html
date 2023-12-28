@@ -38,5 +38,12 @@
                 choices[i].style.color = "white";
             })
         }
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
     {% endblock %}
 </script>

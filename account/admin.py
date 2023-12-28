@@ -21,7 +21,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
 
 @admin.register(Interest)
-class ProfileAdmin(admin.ModelAdmin):
+class InterestAdmin(admin.ModelAdmin):
     list_display = ['name', 'group']
 
 

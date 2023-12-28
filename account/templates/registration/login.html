@@ -15,12 +15,6 @@
         <h1 style="font-size: 72px;">FindMe</h1>
         <h2>Log in to continue</h2>
 
-        {% if form.errors %}
-            <p>
-                Your username and password did not match.
-                Please try again.
-            </p>
-        {% endif %}
         <form action="" method="post">
             {% csrf_token %}
             {{ form.username|add_attr:'placeholder:Username' }}
@@ -33,5 +27,15 @@
             <a href="{% url 'account:user_register' %}">Sign up</a>
         </p>
     </div>
-
 {% endblock %}
+<script>
+    {% block domready %}
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+    {% endblock %}
+</script>

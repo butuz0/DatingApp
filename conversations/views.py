@@ -23,25 +23,24 @@ def conversation_detail(request, user_id):
     allow_conversation = True
 
     try:
+        like = Like.objects.get(user_from=request.user, user_to=person)
+    except Like.DoesNotExist:
+        allow_conversation = False
+    else:
+        if not like.match():
+            allow_conversation = False
+
+    if not allow_conversation:
+        return render(request, 'conversations/conversation_details.html', {'person': person,
+                                                                           'allow_conversation': allow_conversation})
+
+    try:
         conversation = Conversation.objects.filter(users__in=[str(request.user.id)]).filter(users__in=[user_id]).get()
     except Conversation.DoesNotExist:
-        # allow to start conversation only if users liked each other
-        try:
-            like = Like.objects.get(user_from=request.user, user_to=person)
-        except Like.DoesNotExist:
-            allow_conversation = False
-        else:
-            if not like.match():
-                allow_conversation = False
-
-        if not allow_conversation:
-            return render(request, 'conversations/conversation_details.html', {'person': person,
-                                                                               'allow_conversation': allow_conversation})
-        else:
-            conversation = Conversation.objects.create()
-            conversation.users.add(str(request.user.id))
-            conversation.users.add(user_id)
-            conversation.save()
+        conversation = Conversation.objects.create()
+        conversation.users.add(str(request.user.id))
+        conversation.users.add(user_id)
+        conversation.save()
 
     if request.method == 'POST':
         message_form = CreateMessageForm(request.POST)

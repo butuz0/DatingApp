@@ -25,12 +25,12 @@
     {% block domready %}
         const navbar = document.getElementsByClassName("button");
         navbar[4].classList.add("selected");
-    {% endblock %}
-    {% if form.errors %}
-        {% for field, errors in form.errors.items %}
-            {% for error in errors %}
-                alert("{{ error }}");
+        {% if form.errors %}
+            {% for field, errors in form.errors.items %}
+                {% for error in errors %}
+                    alert("{{ error }}");
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    {% endif %}
+        {% endif %}
+    {% endblock %}
 </script>

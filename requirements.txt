@@ -1,0 +1,6 @@
+Django
+requests
+randomuser
+easy_thumbnails
+pillow
+django_extensions

@@ -15,7 +15,6 @@
         <div class="person_info">
             {% if person.user_info.photo %}
                 <img src="{% thumbnail person.user_info.photo '180x180' crop='smart' %}" alt="">
-                {# <img src="{{ person.photo.url }}" alt="">#}
             {% else %}
                 <img src="{% static 'img/no_image.png' %}" alt="">
             {% endif %}
@@ -51,7 +50,7 @@
         {% else %}
             <div class="conversation_disallowed">
                 <h2 style="width: 60%">
-                    You can't start a conversation without mutual like
+                    You can't message another person without mutual like
                 </h2>
             </div>
         {% endif %}

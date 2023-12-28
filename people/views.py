@@ -16,7 +16,7 @@ def list_people(request):
     try:
         current_user = request.user.user_info
     except UserProfile.DoesNotExist:
-        redirect(reverse('account:profile_register'))
+        return redirect(reverse('account:profile_register'))
     else:
         # filter people by preferences
         people = (UserProfile.objects.filter(gender_preference__in=[current_user.gender, 'BOTH'])

@@ -60,8 +60,7 @@ ROOT_URLCONF = 'DatingApp.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
-        ,
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -107,25 +106,6 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.facebook.FacebookOAuth2',
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
-]
-
-SOCIAL_AUTH_FACEBOOK_KEY = '370843345517629'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'c12193b6785d1f7926cdcc3a17bf115c'
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '245789340691-u0dhsbhldsi7fnegqehihe3pr8u0t4ts.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
-
-SOCIAL_AUTH_PIPELINE = [
-    'social_core.pipeline.social_auth.social_details',
-    'social_core.pipeline.social_auth.social_uid',
-    'social_core.pipeline.social_auth.auth_allowed',
-    'social_core.pipeline.social_auth.social_user',
-    'social_core.pipeline.user.get_username',
-    'social_core.pipeline.user.create_user',
-    'social_core.pipeline.social_auth.associate_user',
-    'social_core.pipeline.social_auth.load_extra_data',
-    'social_core.pipeline.user.user_details',
 ]
 
 # Internationalization

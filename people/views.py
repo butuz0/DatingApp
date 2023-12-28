@@ -135,7 +135,7 @@ def find_best_match(request):
     people_sorted = [person for person, score in sorted(people_scores.items(), key=lambda x: x[1], reverse=True)]
 
     # save user id with best score and FindMe function time of usage in Cookies
-    if current_user.last_findme_person.id != people_sorted[0]:
+    if current_user.last_findme_person and current_user.last_findme_person.id != people_sorted[0]:
         best_score_user_id = people_sorted[0]
     else:
         best_score_user_id = people_sorted[1]

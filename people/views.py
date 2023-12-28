@@ -4,38 +4,36 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
-from django.contrib import messages
 from django.db.models import Q
-from django.conf import settings
-from account.models import UserProfile, Like, Report
+from account.models import UserProfile, Like
 from account.forms import ReportForm
-from datetime import datetime
 from django.utils import timezone
-import requests
-import json
 
 
 # Create your views here.
 @login_required
 def list_people(request):
-    current_user = request.user.user_info
+    try:
+        current_user = request.user.user_info
+    except UserProfile.DoesNotExist:
+        redirect(reverse('account:profile_register'))
+    else:
+        # filter people by preferences
+        people = (UserProfile.objects.filter(gender_preference__in=[current_user.gender, 'BOTH'])
+                  .exclude(user=request.user))
 
-    # filter people by preferences
-    people = (UserProfile.objects.filter(gender_preference__in=[current_user.gender, 'BOTH'])
-              .exclude(user=request.user))
+        if current_user.gender_preference != 'BOTH':
+            people = people.filter(gender=current_user.gender_preference)
 
-    if current_user.gender_preference != 'BOTH':
-        people = people.filter(gender=current_user.gender_preference)
+        # exclude people who were already liked by user
+        liked_people = [like.user_to for like in Like.objects.filter(user_from=request.user)]
+        people = people.exclude(user__in=liked_people)
 
-    # exclude people who were already liked by user
-    liked_people = [like.user_to for like in Like.objects.filter(user_from=request.user)]
-    people = people.exclude(user__in=liked_people)
+        # random shuffle
+        people = people.order_by('?')
 
-    # random shuffle
-    people = people.order_by('?')
-
-    return render(request, 'people/users_list.html', {'current_user': current_user,
-                                                      'people': people})
+        return render(request, 'people/users_list.html', {'current_user': current_user,
+                                                          'people': people})
 
 
 @login_required

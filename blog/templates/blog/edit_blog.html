@@ -11,8 +11,8 @@
 
 {% block content %}
     <div class="edit_blog">
+        <h1>Your blog</h1>
         {% if posts %}
-            <h1>Your blog</h1>
             {% for post in posts %}
                 <div class="blog_post">
                     {% if post.image %}
@@ -29,8 +29,8 @@
                 </button>
             {% endfor %}
         {% else %}
-            <h2>You do not have any posts yet.<br>
-                <a href="{% url 'people:user_detail' username %}">Back to profile</a>
+            <h2 style="text-align: center;">You do not have any posts yet.<br>
+                <a href="{% url 'people:user_detail' request.user.username %}">Back to profile</a>
             </h2>
         {% endif %}
     </div>

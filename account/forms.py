@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import UserProfile, Interest, Report
+from .models import UserProfile, Report
 from datetime import date
 
 

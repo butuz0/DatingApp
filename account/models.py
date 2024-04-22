@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.urls import reverse
 from django.contrib.auth import get_user_model
-from django.core.validators import MaxValueValidator, MinValueValidator
 import datetime
 
 
@@ -71,6 +70,9 @@ class Like(models.Model):
     # check if two users like each other
     def match(self):
         return Like.objects.filter(user_to=self.user_from, user_from=self.user_to).exists()
+
+    def __str__(self):
+        return f'{self.user_from} liked {self.user_to} at {self.created}'
 
 
 user_model = get_user_model()

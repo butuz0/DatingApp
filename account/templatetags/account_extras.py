@@ -1,5 +1,4 @@
 from django import template
-from account.models import Interest
 
 register = template.Library()
 

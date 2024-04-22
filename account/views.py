@@ -1,9 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
-from django.http import HttpResponse
+from django.contrib.auth import login
 from .forms import UserRegistrationForm, ProfileRegistrationForm, RelationshipForm, InterestsForm, \
     UserSettingsForm, ProfileSettingsForm
 from .models import UserProfile, GroupOfInterests
@@ -95,7 +93,7 @@ def user_settings(request):
 def delete_account(request):
     if request.method == 'POST':
         user = request.user
-        # user.delete()
+        user.delete()
         return redirect('home_page')
 
     return render(request, 'account/delete_account.html')

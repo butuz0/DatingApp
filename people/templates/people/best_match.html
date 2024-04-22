@@ -104,6 +104,8 @@
                         if (data["status"] === "ok") {
                             let previousAction = likeButton.dataset.action;
                             likeButton.dataset.action = previousAction === "like" ? "unlike" : "like";
+                        } else {
+                            alert("Error when processing your Like. Please try again.");
                         }
                     });
             });

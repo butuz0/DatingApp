@@ -1,9 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404
-from django.db.models import Q
 from .models import Conversation, Message
 from account.models import Like
 from .forms import CreateMessageForm

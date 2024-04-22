@@ -4,19 +4,19 @@ from .models import UserProfile, Like, GroupOfInterests, Interest, Report
 
 # Register your models here.
 @admin.register(UserProfile)
-class ProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(admin.ModelAdmin):
     list_display = ['user', 'date_of_birth', 'gender', 'gender_preference', 'photo']
     raw_id_fields = ['user']
     search_fields = ['user__username']
 
 
 @admin.register(Like)
-class ProfileAdmin(admin.ModelAdmin):
+class LikeAdmin(admin.ModelAdmin):
     list_display = ['user_from', 'user_to', 'created']
 
 
 @admin.register(GroupOfInterests)
-class ProfileAdmin(admin.ModelAdmin):
+class GroupOfInterestsAdmin(admin.ModelAdmin):
     list_display = ['name']
 
 

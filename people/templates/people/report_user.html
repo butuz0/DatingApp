@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Report {{ reported_user.first_name }} {{ reported_user.last_name }}</h2>
+    <h2 style="text-align: center">Report {{ reported_user.first_name }} {{ reported_user.last_name }}</h2>
     <p>Please, enter the report reason in the form below</p>
     <form action="" method="post">
         {% csrf_token %}

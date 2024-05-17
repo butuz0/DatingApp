@@ -6,8 +6,9 @@
     {{ user.username }} profile
 {% endblock %}
 
-{% block styles_link %}
-    {% static "people/css/profile_details.css" %}
+{% block head %}
+    <link rel="stylesheet" href="{% static "people/css/profile_details.css" %}">
+    <link rel="stylesheet" href="{% static "blog/css/post_details.css" %}">
 {% endblock %}
 
 {% block content %}
@@ -93,19 +94,46 @@
             {% endif %}
         </div>
     </div>
+
     {% if posts %}
         <div class="separator">{{ user.first_name }}'s blog</div>
         {% for post in posts %}
             <div class="blog_post">
                 {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="">
+                    <img class="post_image" src="{{ post.image.url }}" alt="">
                 {% endif %}
                 <p class="post_text">{{ post.text }}</p>
                 <p class="post_created">{{ post.created }}</p>
+
+                <div class="comments_section">
+                    {% if post.comments.exists %}
+                        {% if post.comments.values|length > 1 %}
+                            <a href="{% url 'blog:get_post' post.id %}">
+                                <p>See all comments ({{ post.comments.all|length }})</p>
+                            </a>
+                        {% endif %}
+                        {% with post.comments.first as comment %}
+                            <div class="comment">
+                                <p>
+                                    <a href="{% url 'people:user_detail' comment.author %}">
+                                        {{ comment.author.first_name }} {{ comment.author.last_name }}
+                                    </a>
+                                    : {{ comment.text }}
+                                </p>
+                            </div>
+                        {% endwith %}
+                    {% endif %}
+                    <div class="new_comment">
+                        <form action="{% url 'blog:add_comment' post.id %}" method="post">
+                            {% csrf_token %}
+                            {{ comment_form.text }}
+                            <input type="submit" value="Comment">
+                        </form>
+                    </div>
+                </div>
             </div>
         {% endfor %}
     {% endif %}
-
 {% endblock %}
 
 <script>

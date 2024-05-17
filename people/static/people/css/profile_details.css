@@ -103,32 +103,6 @@
     margin-top: 5%;
 }
 
-.blog_post {
-    margin: 25px 0;
-    border: 1px solid black;
-    border-radius: 8px;
-    padding: 10px;
-}
-
-.blog_post img {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
-    border-radius: 10px;
-    border: 1px solid grey;
-}
-
-.post_text {
-    margin: 10px 0;
-}
-
-.post_created {
-    margin: 0;
-    font-size: medium;
-    color: grey;
-}
-
 .edit_blog {
     padding-bottom: 10px;
 }

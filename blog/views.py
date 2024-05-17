@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from .forms import CreatePostForm, CreateCommentForm
 from django.urls import reverse
-from .models import Post
+from .models import Post, Comment
 
 
 # Create your views here.
@@ -30,19 +30,7 @@ def edit_blog(request):
 @login_required
 def get_post(request, post_id):
     post = Post.objects.get(id=post_id)
-
-    if request.method == 'POST':
-        comment_form = CreateCommentForm(request.POST)
-        if comment_form.is_valid():
-            comment = comment_form.save(commit=False)
-            comment.post = post
-            comment.author = request.user
-            comment.save()
-            return redirect(reverse('people:user_detail', kwargs={'username': request.user.username}))
-
-    else:
-        comment_form = CreateCommentForm()
-
+    comment_form = CreateCommentForm()
     return render(request, 'blog/post_details.html', {'post': post,
                                                       'comment_form': comment_form})
 
@@ -57,7 +45,17 @@ def add_comment(request, post_id):
         comment.post = post
         comment.author = request.user
         comment.save()
-    return redirect(reverse('people:user_detail', kwargs={'username': request.user.username}))
+        return redirect(reverse('blog:get_post', kwargs={'post_id': post_id}))
+
+
+@login_required
+def delete_comment(request, post_id, comment_id):
+    comment = Comment.objects.get(id=comment_id)
+    if request.method == 'POST':
+        comment.delete()
+        return redirect(reverse('blog:get_post', kwargs={'post_id': post_id}))
+    else:
+        return render(request, 'blog/delete_comment.html', {'comment': comment})
 
 
 @login_required

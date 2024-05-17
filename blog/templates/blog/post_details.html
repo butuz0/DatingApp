@@ -28,9 +28,9 @@
             </div>
             <div class="comments_section">
                 {% for comment in post.comments.all %}
-                    <div class="comment">
-                        <div class="comment_content">
-                            {% with comment.author as author %}
+                    {% with comment.author as author %}
+                        <div class="comment">
+                            <div class="comment_content">
                                 <div class="comment_img">
                                     <a href="{% url 'people:user_detail' comment.author.username %}">
                                         {% if author.user_info.photo %}
@@ -47,16 +47,20 @@
                                     </a>
                                     : {{ comment.text }}
                                 </p></div>
-
-                            {% endwith %}
+                            </div>
+                            <p class="comment_time">{{ comment.created }}</p>
                         </div>
-                        <p class="comment_time">{{ comment.created }}</p>
-                    </div>
+                        {% if author == request.user or post.author == request.user %}
+                            <a href="{% url 'blog:delete_comment' post.id comment.id %}">
+                                <button>Delete comment</button>
+                            </a>
+                        {% endif %}
+                    {% endwith %}
                 {% endfor %}
             </div>
         </div>
         <div class="new_comment">
-            <form action="" method="post">
+            <form action="{% url 'blog:add_comment' post.id %}" method="post">
                 {% csrf_token %}
                 {{ comment_form.text }}
                 <input type="submit" value="Comment">

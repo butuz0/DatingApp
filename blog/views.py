@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .forms import CreatePostForm
+from .forms import CreatePostForm, CreateCommentForm
 from django.urls import reverse
 from .models import Post
 
@@ -25,6 +25,39 @@ def create_post(request):
 def edit_blog(request):
     posts = Post.objects.filter(author=request.user)
     return render(request, 'blog/edit_blog.html', {'posts': posts})
+
+
+@login_required
+def get_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+
+    if request.method == 'POST':
+        comment_form = CreateCommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.post = post
+            comment.author = request.user
+            comment.save()
+            return redirect(reverse('people:user_detail', kwargs={'username': request.user.username}))
+
+    else:
+        comment_form = CreateCommentForm()
+
+    return render(request, 'blog/post_details.html', {'post': post,
+                                                      'comment_form': comment_form})
+
+
+@login_required
+def add_comment(request, post_id):
+    post = Post.objects.get(id=post_id)
+    print(f'adding comment to post {post}')
+    comment_form = CreateCommentForm(request.POST)
+    if comment_form.is_valid():
+        comment = comment_form.save(commit=False)
+        comment.post = post
+        comment.author = request.user
+        comment.save()
+    return redirect(reverse('people:user_detail', kwargs={'username': request.user.username}))
 
 
 @login_required

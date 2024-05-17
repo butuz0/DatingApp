@@ -1,0 +1,115 @@
+.post {
+    height: 83%;
+    overflow-y: scroll;
+}
+
+.blog_post {
+    margin: 25px 0;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.post_image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    border-radius: 10px;
+    border: 1px solid grey;
+}
+
+.post_text {
+    margin: 10px 0;
+}
+
+.post_created {
+    margin: 0;
+    font-size: medium;
+    color: grey;
+}
+
+.comment {
+    margin: 5px;
+}
+
+.comment_content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.comment_img {
+    width: 7%;
+}
+
+.comment_text {
+    width: 93%;
+    padding: 5px;
+}
+
+.comment_img img {
+    border-radius: 100%;
+    border: 1px solid black;
+    width: 100%;
+}
+
+.new_comment {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    margin-top: auto;
+}
+
+.new_comment {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-top: 1px solid #ccc;
+    margin-top: auto;
+}
+
+.new_comment form {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.new_comment textarea {
+    padding: 8px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: none;
+    font-size: large;
+    font-family: 'Trebuchet MS', sans-serif;
+    width: 90%;
+    height: 70%;
+}
+
+.new_comment input {
+    background-color: rgb(68, 147, 227);
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.new_comment input:hover {
+    background-color: rgb(39, 117, 196); /* Darker green on hover */
+}
+
+.new_comment label {
+    display: none;
+}
+
+.comment_time {
+    font-size: medium;
+    color: #7f7b87;
+    padding: 0;
+    margin: 0;
+}

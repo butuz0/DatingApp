@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load thumbnail %}
+
+{% block title %}
+    {{ user.username }}'s post {{ post.id }}
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static "blog/css/post_details.css" %}">
+    <link rel="stylesheet" href="{% static "people/css/profile_details.css" %}">
+{% endblock %}
+
+{% block content %}
+    <div style="height: 99%">
+        <div>
+            <a href="{% url 'people:user_detail' user.username %}">
+                <h1 style="margin: 2%">{{ user.first_name }} {{ user.last_name }}</h1>
+            </a>
+        </div>
+        <div class="post">
+            <div class="blog_post">
+                {% if post.image %}
+                    <img class="post_image" src="{{ post.image.url }}" alt="">
+                {% endif %}
+                <p class="post_text">{{ post.text }}</p>
+                <p class="post_created">{{ post.created }}</p>
+            </div>
+            <div class="comments_section">
+                {% for comment in post.comments.all %}
+                    <div class="comment">
+                        <div class="comment_content">
+                            {% with comment.author as author %}
+                                <div class="comment_img">
+                                    <a href="{% url 'people:user_detail' comment.author.username %}">
+                                        {% if author.user_info.photo %}
+                                            <img src="{% thumbnail author.user_info.photo '180x180' crop='smart' %}"
+                                                 alt="">
+                                        {% else %}
+                                            <img src="{% static 'img/no_image.png' %}" alt="">
+                                        {% endif %}
+                                    </a>
+                                </div>
+                                <div class="comment_text"><p>
+                                    <a href="{% url 'people:user_detail' comment.author.username %}">
+                                        {{ author.first_name }} {{ author.last_name }}
+                                    </a>
+                                    : {{ comment.text }}
+                                </p></div>
+
+                            {% endwith %}
+                        </div>
+                        <p class="comment_time">{{ comment.created }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="new_comment">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{ comment_form.text }}
+                <input type="submit" value="Comment">
+            </form>
+        </div>
+    </div>
+{% endblock %}

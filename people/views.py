@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from account.models import UserProfile, Like
 from account.forms import ReportForm
+from blog.forms import CreateCommentForm
 from django.utils import timezone
 
 
@@ -40,12 +41,13 @@ def list_people(request):
 def user_detail(request, username):
     user = get_object_or_404(User, username=username)
     posts = user.blog_posts.all()
+    comment_form = CreateCommentForm()
     return render(request, 'people/user_profile.html', {'user': user,
-                                                        'posts': posts})
+                                                        'posts': posts,
+                                                        'comment_form': comment_form})
 
 
 @login_required
-@require_POST
 def like_user(request):
     user_id = request.POST.get('id')
     action = request.POST.get('action')

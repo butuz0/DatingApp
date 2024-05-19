@@ -26,6 +26,7 @@ urlpatterns = [
     path('people/', include('people.urls', namespace='people')),
     path('blog/', include('blog.urls', namespace='blog')),
     path('conversations/', include('conversations.urls', namespace='conversations')),
+    path('statistic/', include('statistic.urls', namespace='statistic')),
     path('', views.home_page, name='home_page'),
 ]
 

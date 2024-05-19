@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from .forms import CreatePostForm, CreateCommentForm
 from django.urls import reverse
+from django.http import JsonResponse
+from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Comment
+from .redis_utils import add_like, remove_like, get_likes_count, has_liked
 
 
 # Create your views here.
@@ -30,15 +32,21 @@ def edit_blog(request):
 @login_required
 def get_post(request, post_id):
     post = Post.objects.get(id=post_id)
+
+    comments = Comment.objects.filter(post=post_id)
+    for comment in comments:
+        comment.likes_amount = get_likes_count(comment.id)
+        comment.has_liked = has_liked(request.user.id, comment.id)
+
     comment_form = CreateCommentForm()
     return render(request, 'blog/post_details.html', {'post': post,
+                                                      'comments': comments,
                                                       'comment_form': comment_form})
 
 
 @login_required
 def add_comment(request, post_id):
     post = Post.objects.get(id=post_id)
-    print(f'adding comment to post {post}')
     comment_form = CreateCommentForm(request.POST)
     if comment_form.is_valid():
         comment = comment_form.save(commit=False)
@@ -80,3 +88,18 @@ def delete_post(request, post_id):
         return redirect(reverse('blog:edit_blog'))
     else:
         return render(request, 'blog/delete_post.html', {'post': post})
+
+
+@login_required
+def like_comment(request):
+    comment_id = request.POST.get('id')
+    action = request.POST.get('action')
+
+    if comment_id and action:
+        if action == 'comment_like':
+            add_like(request.user.id, comment_id)
+        else:
+            remove_like(request.user.id, comment_id)
+        return JsonResponse({'status': 'ok'})
+
+    return JsonResponse({'status': 'error'})

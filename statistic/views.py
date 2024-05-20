@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .redis_utils import increment_profile_visits, get_profile_visits
-from .stats_info import get_daily_likes_data, get_relationship_type_data
+from .stats_info import get_daily_likes_data, get_relationship_type_data, get_age_groups_data
 from datetime import date, timedelta
 import json
 

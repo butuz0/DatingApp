@@ -1,6 +1,7 @@
 from django.db.models import Count
+from account.models import Like, UserProfile
 from datetime import date, timedelta
-from account.models import Like
+from collections import defaultdict
 
 
 def get_likes(user, days: int = None):

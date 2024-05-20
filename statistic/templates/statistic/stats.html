@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ request.user.first_name }} {{ request.user.first_name }} Statistics
+{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+    <h1>Stats page</h1>
+    <ul>
+        <li>
+            <a href="{% url 'statistic:profile_likes' %}">Likes</a>
+        </li>
+        <li>
+            <a href="{% url 'statistic:users_analysis' %}">Relationship</a>
+        </li>
+        <li>
+            <a href="{% url 'statistic:users_analysis2' %}">Age</a>
+        </li>
+    </ul>
+{% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[5].classList.add("selected");
+    {% endblock %}
+</script>

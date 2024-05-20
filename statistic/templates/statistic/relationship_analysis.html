@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ request.user.first_name }} {{ request.user.first_name }} Statistics
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Relationship Types</h1>
+
+    <h3>Relationship Type of Users Who Liked Me</h3>
+    <canvas id="receivedRelationshipChart" width="400" height="200"></canvas>
+
+    <h3>Relationship Type of Users I Liked</h3>
+    <canvas id="givenRelationshipChart" width="400" height="200"></canvas>
+{% endblock %}
+
+<script>
+    {% block domready %}
+        function createPieChart(chartId, chartData, chartLabels) {
+            const ctx = document.getElementById(chartId).getContext('2d');
+            new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: Object.values(chartData),
+                        backgroundColor: ['rgba(75, 192, 192, 0.2)', 'rgba(153, 102, 255, 0.2)', 'rgba(255, 206, 86, 0.2)', 'rgba(255, 99, 132, 0.2)'],
+                        borderColor: ['rgba(75, 192, 192, 1)', 'rgba(153, 102, 255, 1)', 'rgba(255, 206, 86, 1)', 'rgba(255, 99, 132, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        const receivedRelationshipData = {{ relationship_data_received|safe }};
+        const givenRelationshipData = {{ relationship_data_given|safe }};
+        const labels = ["Short Relationship", "True Love", "Friendship", "Having Fun"];
+
+        createPieChart("receivedRelationshipChart", receivedRelationshipData, labels);
+        createPieChart("givenRelationshipChart", givenRelationshipData, labels);
+    {% endblock %}
+</script>

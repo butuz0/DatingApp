@@ -1,12 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from people.views import Like, UserProfile
 from .redis_utils import increment_profile_visits, get_profile_visits
-from .stats_info import age_group, get_relationship_type_data, get_daily_likes_data, get_age_groups_data
-from .stats_info import get_daily_likes_data
+from .stats_info import get_daily_likes_data, get_relationship_type_data
 from datetime import date, timedelta
-from collections import defaultdict
 import json
 
 
@@ -43,3 +40,15 @@ def get_profile_likes_data(request, days):
 @login_required
 def profile_likes(request):
     return render(request, 'statistic/profile_likes.html')
+
+
+@login_required
+def relationship_types_analysis(request):
+    received, given = get_relationship_type_data(request.user)
+
+    context = {
+        'relationship_data_received': json.dumps(received),
+        'relationship_data_given': json.dumps(given),
+    }
+
+    return render(request, 'statistic/relationship_analysis.html', context)

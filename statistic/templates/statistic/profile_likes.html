@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ request.user.first_name }} {{ request.user.first_name }} Statistics
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Profile likes</h1>
+    {% for date, likes in daily_likes.items %}
+        {{ date }}: {{ likes }}
+        <br>
+    {% endfor %}
+
+    <h2>Last week received likes</h2>
+    <canvas id="likesChartWeek" width="400" height="200"></canvas>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/statistic/profile_likes_data/7/')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = Object.keys(data.daily_likes_received);
+                    const valuesReceived = Object.values(data.daily_likes_received);
+                    const valuesGiven = Object.values(data.daily_likes_given);
+
+                    const ctx = document.getElementById('likesChartWeek').getContext('2d');
+                    const likesChartWeek = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Likes Received',
+                                    data: valuesReceived,
+                                    borderColor: 'rgb(70,114,201)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Likes Given',
+                                    data: valuesGiven,
+                                    borderColor: 'rgb(189,59,88)',
+                                    borderWidth: 1,
+                                    fill: false
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+        });
+    </script>
+
+    <h2>Last month received likes</h2>
+    <canvas id="likesChartMonth" width="400" height="200"></canvas>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('/statistic/profile_likes_data/30/')
+                .then(response => response.json())
+                .then(data => {
+                    const labels = Object.keys(data.daily_likes_received);
+                    const valuesReceived = Object.values(data.daily_likes_received);
+                    const valuesGiven = Object.values(data.daily_likes_given);
+
+                    const ctx = document.getElementById('likesChartMonth').getContext('2d');
+                    const likesChartMonth = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Likes Received',
+                                    data: valuesReceived,
+                                    borderColor: 'rgb(70,114,201)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                                {
+                                    label: 'Likes Given',
+                                    data: valuesGiven,
+                                    borderColor: 'rgb(189,59,88)',
+                                    borderWidth: 1,
+                                    fill: false
+                                }
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+        });
+    </script>
+{% endblock %}

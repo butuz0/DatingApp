@@ -9,6 +9,7 @@
     <title>FindMe |{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static "account/css/base.css" %}">
     <link rel="stylesheet" href="{% block styles_link %}{% endblock %}">
+    {% block head %}{% endblock %}
 </head>
 <body>
     <div id="page">
@@ -36,6 +37,7 @@
             <nav>
                 <ul>
                     <li><a class="button" href="{% url 'people:user_detail' request.user %}">My Profile</a></li>
+                    <li><a class="button" href="{% url 'statistic:index' %}">Statistic</a></li>
                     <li><a class="button" href="{% url 'account:settings' %}">Settings</a></li>
                     <li><a class="button" href="{% url 'account:logout_confirm' %}">Log out</a></li>
                 </ul>

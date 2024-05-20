@@ -52,3 +52,15 @@ def relationship_types_analysis(request):
     }
 
     return render(request, 'statistic/relationship_analysis.html', context)
+
+
+@login_required
+def age_analysis(request):
+    received, given = get_age_groups_data(request.user)
+
+    context = {
+        'received_age_data': json.dumps(received),
+        'given_age_data': json.dumps(given),
+    }
+
+    return render(request, 'statistic/age_analysis.html', context)

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ request.user.first_name }} {{ request.user.first_name }} Statistics
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Age Groups</h1>
+
+    <h3>Age Groups of Users Who Liked Me</h3>
+    <canvas id="receivedAgeChart"></canvas>
+
+    <h3>Age Groups of Users I Liked</h3>
+    <canvas id="givenAgeChart"></canvas>
+
+{% endblock %}
+
+<script>
+    {% block domready %}
+        function createBarChart(chartId, chartData, chartLabels) {
+            const ctx = document.getElementById(chartId).getContext("2d");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: "Users",
+                        data: Object.values(chartData),
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Data for age groups
+        const receivedAgeData = {{ received_age_data|safe }};
+        const givenAgeData = {{ given_age_data|safe }};
+
+        const ageLabels = ["18-24", "25-34", "35-44", "45-54", "55-64", "65+"];
+
+        // Map data to the correct order
+        const receivedData = ageLabels.map(label => receivedAgeData[label] || 0);
+        const givenData = ageLabels.map(label => givenAgeData[label] || 0);
+
+        createBarChart("receivedAgeChart", receivedData, ageLabels);
+        createBarChart("givenAgeChart", givenData, ageLabels);
+    {% endblock %}
+</script>

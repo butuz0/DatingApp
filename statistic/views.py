@@ -1,11 +1,13 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
-from django.db.models.functions import TruncDate
 from django.http import JsonResponse
-from people.views import Like
+from people.views import Like, UserProfile
 from .redis_utils import increment_profile_visits, get_profile_visits
+from .stats_info import age_group, get_relationship_type_data, get_daily_likes_data, get_age_groups_data
+from .stats_info import get_daily_likes_data
 from datetime import date, timedelta
+from collections import defaultdict
+import json
 
 
 # Create your views here.
@@ -28,38 +30,13 @@ def profile_visits(request, days):
         'visits': visits})
 
 
-def get_likes(user, days):
-    today = date.today() + timedelta(days=1)
-    start_date = today - timedelta(days=days)
-
-    likes_received = Like.objects.filter(user_to=user, created__range=[start_date, today])
-    likes_given = Like.objects.filter(user_from=user, created__range=[start_date, today])
-
-    return likes_received, likes_given
-
-
 @login_required
 def get_profile_likes_data(request, days):
-    likes_received, likes_given = get_likes(request.user, days)
-
-    today = date.today() + timedelta(days=1)
-    start_date = today - timedelta(days=days)
-
-    daily_likes_received = {}
-    daily_likes_given = {}
-    for n in range((today - start_date).days + 1):
-        day = start_date + timedelta(days=n)
-        next_day = day + timedelta(days=1)
-
-        day_likes_received = likes_received.filter(created__gte=day, created__lt=next_day).count()
-        day_likes_given = likes_given.filter(created__gte=day, created__lt=next_day).count()
-
-        daily_likes_received[day.strftime('%d-%m')] = day_likes_received
-        daily_likes_given[day.strftime('%d-%m')] = day_likes_given
+    received, given = get_daily_likes_data(request.user, days)
 
     return JsonResponse({
-        'daily_likes_received': daily_likes_received,
-        'daily_likes_given': daily_likes_given
+        'daily_likes_received': received,
+        'daily_likes_given': given
     })
 
 

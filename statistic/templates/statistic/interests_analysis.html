@@ -37,6 +37,7 @@
                     labels: chartLabels,
                     datasets: [{
                         data: Object.values(chartData),
+                        backgroundColor: {{ backgroundColors|safe }},
                         borderWidth: 1
                     }]
                 },

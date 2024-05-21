@@ -17,5 +17,6 @@ def add_profile_visits(user_id, visitor_id):
 
 
 def get_profile_visits(user_id, day):
-    redis_key = f'user:{user_id}:profile_visits:{day}'
+    day_formatted = day.strftime('%d-%m-%Y')
+    redis_key = f'user:{user_id}:profile_visits:{day_formatted}'
     return r.scard(redis_key)

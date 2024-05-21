@@ -1,5 +1,6 @@
 from django.db.models import Count
 from account.models import Like, UserProfile
+from ..redis_utils import get_profile_visits
 from datetime import date, timedelta
 from collections import defaultdict
 
@@ -89,3 +90,15 @@ def get_age_groups_data(user):
         given_age_counts[age_group(age)] += 1
 
     return received_age_counts, given_age_counts
+
+
+def get_daily_profile_visits_data(user, days):
+    today = date.today()
+    start_date = today - timedelta(days=days)
+
+    daily_visits = {}
+    for n in range((today - start_date).days + 1):
+        day = start_date + timedelta(days=n)
+        daily_visits[day.strftime('%d-%m')] = get_profile_visits(user, day)
+
+    return daily_visits

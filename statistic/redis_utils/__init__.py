@@ -1,1 +1,1 @@
-from .redis_utils import increment_profile_visits, get_profile_visits
+from .redis_utils import add_profile_visits, get_profile_visits

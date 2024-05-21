@@ -5,10 +5,11 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from django.utils import timezone
 from account.models import UserProfile, Like
 from account.forms import ReportForm
 from blog.forms import CreateCommentForm
-from django.utils import timezone
+from statistic.redis_utils import add_profile_visits
 
 
 # Create your views here.
@@ -40,6 +41,7 @@ def list_people(request):
 @login_required
 def user_detail(request, username):
     user = get_object_or_404(User, username=username)
+    add_profile_visits(user, request.user)
     posts = user.blog_posts.all()
     comment_form = CreateCommentForm()
     return render(request, 'people/user_profile.html', {'user': user,

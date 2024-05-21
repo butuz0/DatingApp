@@ -7,13 +7,15 @@ r = redis.Redis(host=settings.REDIS_HOST,
                 db=settings.REDIS_DB)
 
 
-# increment today`s users profile visits by one
-def increment_profile_visits(user_id):
+# add users who visited profile to database
+def add_profile_visits(user_id, visitor_id):
+    if user_id == visitor_id:
+        return
     today = date.today().strftime('%d-%m-%Y')
     redis_key = f'user:{user_id}:profile_visits:{today}'
-    r.incr(redis_key)
+    r.sadd(redis_key, visitor_id)
 
 
 def get_profile_visits(user_id, day):
     redis_key = f'user:{user_id}:profile_visits:{day}'
-    return int(r.get(redis_key) or 0)
+    return r.scard(redis_key)

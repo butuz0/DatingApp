@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from account.models import GroupOfInterests
 from .redis_utils import get_profile_visits
 from .stats_info import *
 from datetime import date, timedelta
@@ -98,4 +99,6 @@ def most_popular_interests_analysis(request, amount):
 
 @login_required
 def interests_page(request):
-    return render(request, 'statistic/interests_analysis.html')
+    background_colors = list(GroupOfInterests.objects.all().values_list('background_color', flat=True))
+    return render(request, 'statistic/interests_analysis.html',
+                  {'backgroundColors': background_colors})

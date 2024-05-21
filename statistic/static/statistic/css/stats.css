@@ -1,0 +1,33 @@
+#links {
+    display: flex;
+    justify-content: center;
+}
+
+#stats_list {
+    list-style-type: none;
+    padding: 0;
+    width: 60%;
+}
+
+.link {
+    margin: 5px;
+    text-align: center;
+    border-radius: 10px;
+    border: 1px solid grey;
+    transition: 0.5s;
+    background-size: 200% auto;
+    background-image: linear-gradient(to right, #5c75fa 0%, #b248ec 51%);
+}
+
+.link a {
+    text-decoration: none;
+    color: #ffffff;
+}
+
+.link div {
+    padding: 10px;
+}
+
+.link h3 {
+    margin: 0;
+}

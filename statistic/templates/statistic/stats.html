@@ -1,32 +1,55 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     {{ request.user.first_name }} {{ request.user.first_name }} Statistics
 {% endblock %}
 
 {% block head %}
-
+    <link rel="stylesheet" href="{% static 'statistic/css/stats.css' %}">
 {% endblock %}
 
 {% block content %}
-    <h1>Stats page</h1>
-    <ul>
-        <li>
-            <a href="{% url 'statistic:profile_likes' %}">Likes</a>
-        </li>
-        <li>
-            <a href="{% url 'statistic:profile_visits' %}">Profile visits</a>
-        </li>
-        <li>
-            <a href="{% url 'statistic:relationship_types_analysis' %}">Relationship</a>
-        </li>
-        <li>
-            <a href="{% url 'statistic:age_analysis' %}">Age</a>
-        </li>
-        <li>
-            <a href="{% url 'statistic:interests_analysis' %}">Interests</a>
-        </li>
-    </ul>
+    <h1>Your statistics</h1>
+    <div id="links">
+        <ul id="stats_list">
+            <li class="link">
+                <a href="{% url 'statistic:profile_likes' %}">
+                    <div>
+                        <h3>Likes</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="link">
+                <a href="{% url 'statistic:profile_visits' %}">
+                    <div>
+                        <h3>Profile visits</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="link">
+                <a href="{% url 'statistic:relationship_types_analysis' %}">
+                    <div>
+                        <h3>Relationship</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="link">
+                <a href="{% url 'statistic:age_analysis' %}">
+                    <div>
+                        <h3>Age</h3>
+                    </div>
+                </a>
+            </li>
+            <li class="link">
+                <a href="{% url 'statistic:interests_analysis' %}">
+                    <div>
+                        <h3>Interests</h3>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}
 
 <script>

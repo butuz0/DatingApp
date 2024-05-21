@@ -3,7 +3,7 @@ from django.db.models.functions import TruncMonth
 from account.models import Like, UserProfile, Interest, GroupOfInterests
 from ..redis_utils import get_profile_visits
 from datetime import date, timedelta
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 
 def get_likes(user, days: int = None):
@@ -108,7 +108,6 @@ def get_daily_profile_visits_data(user, days):
 def get_monthly_likes(user):
     today = date.today()
 
-    # Генеруємо список останніх 6 місяців
     months = []
     for i in range(6, -1, -1):
         month = today.replace(day=1) - timedelta(days=i * 30)
@@ -138,20 +137,16 @@ def get_monthly_likes(user):
 
 
 def get_interest_groups_data(user):
-    # Лайки, отримані користувачем
-    received_likes = Like.objects.filter(user_to=user)
-    received_interest_groups = Interest.objects.filter(
-        userprofile__in=[like.user_from.user_info for like in received_likes]
-    ).values_list('group__name', flat=True)
+    get_most_popular_interests_data(user)
+    received_likes, given_likes = get_likes(user)
+    received_interest_groups = (Interest.objects
+                                .filter(userprofile__in=[like.user_from.user_info for like in received_likes])
+                                .values_list('group__name', flat=True))
 
-    # Лайки, поставлені користувачем
-    given_likes = Like.objects.filter(user_from=user)
-    given_interest_groups = Interest.objects.filter(
-        userprofile__in=[like.user_to.user_info for like in given_likes]
-    ).values_list('group__name', flat=True)
+    given_interest_groups = (Interest.objects
+                             .filter(userprofile__in=[like.user_to.user_info for like in given_likes])
+                             .values_list('group__name', flat=True))
 
-    # Підрахунок частоти кожної групи
-    from collections import Counter
     received_group_counts = Counter(received_interest_groups)
     given_group_counts = Counter(given_interest_groups)
 

@@ -5,7 +5,8 @@ from django.urls import reverse
 from django.http import JsonResponse
 from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Comment
-from .redis_utils import add_comment_like, remove_comment_like, get_comment_likes_count, has_liked_comment
+from .redis_utils import add_comment_like, remove_comment_like, get_comment_likes_count, has_liked_comment, \
+    add_post_like, remove_post_like, get_post_likes_count, has_liked_post
 
 
 # Create your views here.
@@ -32,11 +33,13 @@ def edit_blog(request):
 @login_required
 def get_post(request, post_id):
     post = Post.objects.get(id=post_id)
+    post.likes_amount = get_post_likes_count(post_id)
+    post.has_liked = has_liked_post(request.user.id, post_id)
 
     comments = Comment.objects.filter(post=post_id)
     for comment in comments:
         comment.likes_amount = get_comment_likes_count(comment.id)
-        comment.has_liked_comment = has_liked_comment(request.user.id, comment.id)
+        comment.has_liked = has_liked_comment(request.user.id, comment.id)
 
     comment_form = CreateCommentForm()
     return render(request, 'blog/post_details.html', {'post': post,
@@ -100,6 +103,21 @@ def like_comment(request):
             add_comment_like(request.user.id, comment_id)
         else:
             remove_comment_like(request.user.id, comment_id)
+        return JsonResponse({'status': 'ok'})
+
+    return JsonResponse({'status': 'error'})
+
+
+@login_required
+def like_post(request):
+    post_id = request.POST.get('id')
+    action = request.POST.get('action')
+
+    if post_id and action:
+        if action == 'post_like':
+            add_post_like(request.user.id, post_id)
+        else:
+            remove_post_like(request.user.id, post_id)
         return JsonResponse({'status': 'ok'})
 
     return JsonResponse({'status': 'error'})

@@ -27,7 +27,7 @@
                 <p class="post_created">{{ post.created }}</p>
             </div>
             <div class="comments_section">
-                {% for comment in post.comments.all %}
+                {% for comment in comments %}
                     {% with comment.author as author %}
                         <div class="comment">
                             <div class="comment_content">
@@ -41,21 +41,40 @@
                                         {% endif %}
                                     </a>
                                 </div>
-                                <div class="comment_text"><p>
-                                    <a href="{% url 'people:user_detail' comment.author.username %}">
-                                        {{ author.first_name }} {{ author.last_name }}
-                                    </a>
-                                    : {{ comment.text }}
-                                </p></div>
+                                <div class="comment_text">
+                                    <p>
+                                        <a href="{% url 'people:user_detail' comment.author.username %}">
+                                            {{ author.first_name }} {{ author.last_name }}
+                                        </a>
+                                        : {{ comment.text }}
+                                    </p>
+                                    <p class="likes_amount">
+                                        Likes: {{ comment.likes_amount }}<br>
+                                    </p>
+                                </div>
                             </div>
                             <p class="comment_time">{{ comment.created }}</p>
+                            <div class="comment_like_button">
+                                <a href="#"
+                                   data-id="{{ comment.id }}"
+                                   data-action="comment_{% if comment.has_liked %}un{% endif %}like"
+                                   class="comment_like">
+                                    <div class="like_image">
+                                        <img src="{% static 'img/like_button.png' %}" alt="">
+                                    </div>
+                                </a>
+                            </div>
+                            {% if author == request.user or post.author == request.user %}
+                                <div class="delete_button">
+                                    <a href="{% url 'blog:delete_comment' post.id comment.id %}">
+                                        <button>Delete comment</button>
+                                    </a>
+                                </div>
+                            {% endif %}
                         </div>
-                        {% if author == request.user or post.author == request.user %}
-                            <a href="{% url 'blog:delete_comment' post.id comment.id %}">
-                                <button>Delete comment</button>
-                            </a>
-                        {% endif %}
                     {% endwith %}
+                {% empty %}
+                    <p>No comments for this post</p>
                 {% endfor %}
             </div>
         </div>
@@ -68,3 +87,47 @@
         </div>
     </div>
 {% endblock %}
+
+<script>
+    {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        {% if user == request.user %}
+            navbar[4].classList.add("selected");
+        {% else %}
+            navbar[0].classList.add("selected");
+        {% endif %}
+
+        const url = "{% url 'blog:like_comment' %}";
+        let options = {
+            method: "POST",
+            headers: {'X-CSRFToken': csrftoken},
+            mode: "same-origin"
+        }
+
+        if (document.querySelectorAll(".comment")) {
+            document.querySelectorAll(".comment").forEach((comment) => {
+                comment.querySelector("a.comment_like").addEventListener("click", function (e) {
+                    e.preventDefault();
+                    let likeButton = this;
+
+                    let formData = new FormData();
+                    formData.append("id", likeButton.dataset.id);
+                    formData.append("action", likeButton.dataset.action);
+                    options["body"] = formData;
+
+                    fetch(url, options)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data["status"] === "ok") {
+                                let previousAction = likeButton.dataset.action;
+                                likeButton.dataset.action = previousAction === "comment_like" ? "comment_unlike" : "comment_like";
+                                likeButton.parentElement.classList.toggle("liked");
+                            } else {
+                                alert("Error when processing your Like. Please refresh page and try again.");
+                            }
+                        });
+                });
+            })
+        }
+    {% endblock %}
+</script>

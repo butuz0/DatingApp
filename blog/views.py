@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.http import JsonResponse
 from .forms import CreatePostForm, CreateCommentForm
 from .models import Post, Comment
-from .redis_utils import add_like, remove_like, get_likes_count, has_liked
+from .redis_utils import add_comment_like, remove_comment_like, get_comment_likes_count, has_liked_comment
 
 
 # Create your views here.
@@ -35,8 +35,8 @@ def get_post(request, post_id):
 
     comments = Comment.objects.filter(post=post_id)
     for comment in comments:
-        comment.likes_amount = get_likes_count(comment.id)
-        comment.has_liked = has_liked(request.user.id, comment.id)
+        comment.likes_amount = get_comment_likes_count(comment.id)
+        comment.has_liked_comment = has_liked_comment(request.user.id, comment.id)
 
     comment_form = CreateCommentForm()
     return render(request, 'blog/post_details.html', {'post': post,
@@ -97,9 +97,9 @@ def like_comment(request):
 
     if comment_id and action:
         if action == 'comment_like':
-            add_like(request.user.id, comment_id)
+            add_comment_like(request.user.id, comment_id)
         else:
-            remove_like(request.user.id, comment_id)
+            remove_comment_like(request.user.id, comment_id)
         return JsonResponse({'status': 'ok'})
 
     return JsonResponse({'status': 'error'})

@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .redis_utils import increment_profile_visits, get_profile_visits
-from .stats_info import get_daily_likes_data, get_relationship_type_data, get_age_groups_data
+from .redis_utils import get_profile_visits
+from .stats_info import get_daily_likes_data, get_relationship_type_data, get_age_groups_data, \
+    get_daily_profile_visits_data
 from datetime import date, timedelta
 import json
 
@@ -11,20 +12,6 @@ import json
 @login_required
 def index(request):
     return render(request, 'statistic/stats.html')
-
-
-@login_required
-def profile_visits(request, days):
-    today = date.today()
-    start_date = today - timedelta(days=days)
-
-    visits = {}
-    for n in range((today - start_date).days + 1):
-        day = start_date + timedelta(days=n)
-        visits[day] = get_profile_visits(request.user, day.strftime('%d-%m-%Y'))
-
-    return render(request, 'statistic/profile_visits.html', {
-        'visits': visits})
 
 
 @login_required
@@ -64,3 +51,17 @@ def age_analysis(request):
     }
 
     return render(request, 'statistic/age_analysis.html', context)
+
+
+@login_required
+def get_profile_visits_data(request, days):
+    daily_visits = get_daily_profile_visits_data(request.user, days)
+
+    return JsonResponse({
+        'daily_visits': daily_visits
+    })
+
+
+@login_required
+def profile_visits(request):
+    return render(request, 'statistic/profile_visits.html')

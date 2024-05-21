@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ request.user.first_name }} {{ request.user.first_name }} Statistics
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Profile visits</h1>
+
+    <h3>Last week visits</h3>
+    <canvas id="visitsChartWeek" width="400" height="200"></canvas>
+
+    <h3>Last month visits</h3>
+    <canvas id="visitsChartMonth" width="400" height="200"></canvas>
+{% endblock %}
+
+<script>
+    {% block domready %}
+        function createVisitsLineChart(chartId, days) {
+            fetch(`/statistic/profile_visits_data/${days}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const labels = Object.keys(data.daily_visits);
+                    const values = Object.values(data.daily_visits);
+
+                    const ctx = document.getElementById(chartId).getContext('2d');
+                    const likesChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [
+                                {
+                                    label: 'Profile visits',
+                                    data: values,
+                                    borderColor: 'rgb(70,114,201)',
+                                    borderWidth: 1,
+                                    fill: false
+                                },
+                            ]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                });
+        }
+        createVisitsLineChart("visitsChartWeek", 7);
+        createVisitsLineChart("visitsChartMonth", 30);
+    {% endblock %}
+</script>

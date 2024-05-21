@@ -7,20 +7,20 @@ r = redis.Redis(host=settings.REDIS_HOST,
 
 
 # adds persons like to comment
-def add_like(user_id, comment_id):
+def add_comment_like(user_id, comment_id):
     r.sadd(f'comment:{comment_id}:likes', user_id)
 
 
 # removes persons like from comment
-def remove_like(user_id, comment_id):
+def remove_comment_like(user_id, comment_id):
     r.srem(f'comment:{comment_id}:likes', user_id)
 
 
 # returns total comments likes
-def get_likes_count(comment_id):
+def get_comment_likes_count(comment_id):
     return r.scard(f'comment:{comment_id}:likes')
 
 
 # checks if person has liked the comment
-def has_liked(user_id, comment_id):
+def has_liked_comment(user_id, comment_id):
     return r.sismember(f'comment:{comment_id}:likes', user_id)

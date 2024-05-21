@@ -13,7 +13,7 @@ def add_profile_visits(user_id, visitor_id):
         return
     today = date.today().strftime('%d-%m-%Y')
     redis_key = f'user:{user_id}:profile_visits:{today}'
-    r.sadd(redis_key, visitor_id)
+    r.sadd(redis_key, str(visitor_id))
 
 
 def get_profile_visits(user_id, day):

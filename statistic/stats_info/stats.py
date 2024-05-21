@@ -1,4 +1,5 @@
 from django.db.models import Count
+from django.db.models.functions import TruncMonth
 from account.models import Like, UserProfile
 from ..redis_utils import get_profile_visits
 from datetime import date, timedelta
@@ -102,3 +103,35 @@ def get_daily_profile_visits_data(user, days):
         daily_visits[day.strftime('%d-%m')] = get_profile_visits(user, day)
 
     return daily_visits
+
+
+def get_monthly_likes(user):
+    today = date.today()
+
+    # Генеруємо список останніх 6 місяців
+    months = []
+    for i in range(6, -1, -1):
+        month = today.replace(day=1) - timedelta(days=i * 30)
+        months.append(month)
+
+    received_likes = (Like.objects.filter(user_to=user, created__gte=months[0])
+                      .annotate(month=TruncMonth('created'))
+                      .values('month')
+                      .annotate(like_count=Count('id'))
+                      .order_by('month'))
+
+    given_likes = (Like.objects.filter(user_from=user, created__gte=months[0])
+                   .annotate(month=TruncMonth('created'))
+                   .values('month')
+                   .annotate(like_count=Count('id'))
+                   .order_by('month'))
+
+    received_likes_dict = {like['month'].strftime('%B'): like['like_count'] for like in received_likes}
+    given_likes_dict = {like['month'].strftime('%B'): like['like_count'] for like in given_likes}
+
+    monthly_received_likes = {month.strftime('%B'): received_likes_dict.get(month.strftime('%B'), 0) for month in
+                              months}
+    monthly_given_likes = {month.strftime('%B'): given_likes_dict.get(month.strftime('%B'), 0) for month in
+                           months}
+
+    return monthly_received_likes, monthly_given_likes

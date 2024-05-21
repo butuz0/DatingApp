@@ -1,6 +1,6 @@
 from django.db.models import Count
 from django.db.models.functions import TruncMonth
-from account.models import Like, UserProfile
+from account.models import Like, UserProfile, Interest, GroupOfInterests
 from ..redis_utils import get_profile_visits
 from datetime import date, timedelta
 from collections import defaultdict
@@ -135,3 +135,24 @@ def get_monthly_likes(user):
                            months}
 
     return monthly_received_likes, monthly_given_likes
+
+
+def get_interest_groups_data(user):
+    # Лайки, отримані користувачем
+    received_likes = Like.objects.filter(user_to=user)
+    received_interest_groups = Interest.objects.filter(
+        userprofile__in=[like.user_from.user_info for like in received_likes]
+    ).values_list('group__name', flat=True)
+
+    # Лайки, поставлені користувачем
+    given_likes = Like.objects.filter(user_from=user)
+    given_interest_groups = Interest.objects.filter(
+        userprofile__in=[like.user_to.user_info for like in given_likes]
+    ).values_list('group__name', flat=True)
+
+    # Підрахунок частоти кожної групи
+    from collections import Counter
+    received_group_counts = Counter(received_interest_groups)
+    given_group_counts = Counter(given_interest_groups)
+
+    return received_group_counts, given_group_counts

@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ request.user.first_name }} {{ request.user.first_name }} Statistics
+{% endblock %}
+
+{% block head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Interests</h1>
+
+    <h3>Interests of Users Who Liked Me</h3>
+    <canvas id="receivedInterestsChart" width="400" height="200"></canvas>
+
+    <h3>Interests of Users I Liked</h3>
+    <canvas id="givenInterestsChart" width="400" height="200"></canvas>
+{% endblock %}
+
+<script>
+    {% block domready %}
+        function createPieChart(chartId, chartData, chartLabels) {
+            const ctx = document.getElementById(chartId).getContext('2d');
+            new Chart(ctx, {
+                type: "pie",
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        data: Object.values(chartData),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        const receivedRelationshipData = {{ received_interest_groups_data|safe }};
+        const givenRelationshipData = {{ given_interest_groups_data|safe }};
+
+        const receivedValues = Object.values(receivedRelationshipData);
+        const givenValues = Object.values(givenRelationshipData);
+
+        const receivedLabels = Object.keys(receivedRelationshipData);
+        const givenLabels = Object.keys(givenRelationshipData);
+
+        createPieChart("receivedInterestsChart", receivedValues, receivedLabels);
+        createPieChart("givenInterestsChart", givenValues, givenLabels);
+    {% endblock %}
+</script>

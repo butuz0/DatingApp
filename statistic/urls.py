@@ -12,4 +12,5 @@ urlpatterns = [
     path('profile_visits/', views.profile_visits, name='profile_visits'),
     path('profile_visits_data/<int:days>/', views.get_profile_visits_data, name='profile_visits_data'),
     path('monthly_likes/', views.monthly_likes, name='monthly_likes'),
+    path('interests/', views.interests_analysis, name='interests_analysis'),
 ]

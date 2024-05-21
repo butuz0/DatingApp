@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .redis_utils import get_profile_visits
 from .stats_info import get_daily_likes_data, get_relationship_type_data, get_age_groups_data, \
-    get_daily_profile_visits_data, get_monthly_likes
+    get_daily_profile_visits_data, get_monthly_likes, get_interest_groups_data
 from datetime import date, timedelta
 import json
 
@@ -75,3 +75,15 @@ def monthly_likes(request):
         'monthly_likes_received': received,
         'monthly_likes_given': given,
     })
+
+
+@login_required
+def interests_analysis(request):
+    received, given = get_interest_groups_data(request.user)
+
+    context = {
+        'received_interest_groups_data': json.dumps(received),
+        'given_interest_groups_data': json.dumps(given),
+    }
+
+    return render(request, 'statistic/interests_analysis.html', context)

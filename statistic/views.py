@@ -2,8 +2,7 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from .redis_utils import get_profile_visits
-from .stats_info import get_daily_likes_data, get_relationship_type_data, get_age_groups_data, \
-    get_daily_profile_visits_data, get_monthly_likes, get_interest_groups_data
+from .stats_info import *
 from datetime import date, timedelta
 import json
 
@@ -78,12 +77,25 @@ def monthly_likes(request):
 
 
 @login_required
-def interests_analysis(request):
+def interests_groups_analysis(request):
     received, given = get_interest_groups_data(request.user)
 
-    context = {
-        'received_interest_groups_data': json.dumps(received),
-        'given_interest_groups_data': json.dumps(given),
-    }
+    return JsonResponse({
+        'received_interest_groups_data': received,
+        'given_interest_groups_data': given,
+    })
 
-    return render(request, 'statistic/interests_analysis.html', context)
+
+@login_required
+def most_popular_interests_analysis(request, amount):
+    received, given = get_most_popular_interests_data(request.user, amount)
+
+    return JsonResponse({
+        'received_most_popular_interests_data': received,
+        'given_most_popular_interests_data': given,
+    })
+
+
+@login_required
+def interests_page(request):
+    return render(request, 'statistic/interests_analysis.html')

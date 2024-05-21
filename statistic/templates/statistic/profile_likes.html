@@ -23,6 +23,9 @@
 
 <script>
     {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[5].classList.add("selected");
+
         function createLikesLineChart(chartId, days) {
             fetch(`/statistic/profile_likes_data/${days}/`)
                 .then(response => response.json())

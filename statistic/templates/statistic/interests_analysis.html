@@ -26,6 +26,9 @@
 
 <script>
     {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[5].classList.add("selected");
+
         function createPieChart(chartId, chartData, chartLabels) {
             const ctx = document.getElementById(chartId).getContext("2d");
             new Chart(ctx, {

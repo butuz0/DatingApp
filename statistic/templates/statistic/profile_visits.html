@@ -20,6 +20,9 @@
 
 <script>
     {% block domready %}
+        const navbar = document.getElementsByClassName("button");
+        navbar[5].classList.add("selected");
+
         function createVisitsLineChart(chartId, days) {
             fetch(`/statistic/profile_visits_data/${days}/`)
                 .then(response => response.json())

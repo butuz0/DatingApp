@@ -12,16 +12,22 @@
     <h1>Interests</h1>
 
     <h3>Interests of Users Who Liked Me</h3>
-    <canvas id="receivedInterestsChart" width="400" height="200"></canvas>
+    <canvas id="receivedInterestsGroupsChart" width="400" height="200"></canvas>
 
     <h3>Interests of Users I Liked</h3>
-    <canvas id="givenInterestsChart" width="400" height="200"></canvas>
+    <canvas id="givenInterestsGroupsChart" width="400" height="200"></canvas>
+
+    <h3>Most Popular Interests of Users Who Liked Me</h3>
+    <canvas id="receivedMostPopularInterestsChart" width="400" height="200"></canvas>
+
+    <h3>Most Popular Interests of Users I Liked</h3>
+    <canvas id="givenMostPopularInterestsChart" width="400" height="200"></canvas>
 {% endblock %}
 
 <script>
     {% block domready %}
         function createPieChart(chartId, chartData, chartLabels) {
-            const ctx = document.getElementById(chartId).getContext('2d');
+            const ctx = document.getElementById(chartId).getContext("2d");
             new Chart(ctx, {
                 type: "pie",
                 data: {
@@ -36,17 +42,54 @@
                 }
             });
         }
+        function createBarChart(chartId, chartData, chartLabels) {
+            const ctx = document.getElementById(chartId).getContext("2d");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: "Users",
+                        data: Object.values(chartData),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
 
-        const receivedRelationshipData = {{ received_interest_groups_data|safe }};
-        const givenRelationshipData = {{ given_interest_groups_data|safe }};
+        fetch(`/statistic/interests_groups_data/`)
+            .then(response => response.json())
+            .then(data => {
+                const receivedInterestsGroupsData = data.received_interest_groups_data;
+                const givenInterestsGroupsData = data.given_interest_groups_data;
 
-        const receivedValues = Object.values(receivedRelationshipData);
-        const givenValues = Object.values(givenRelationshipData);
+                createPieChart("receivedInterestsGroupsChart",
+                    Object.values(receivedInterestsGroupsData),
+                    Object.keys(receivedInterestsGroupsData));
+                createPieChart("givenInterestsGroupsChart",
+                    Object.values(givenInterestsGroupsData),
+                    Object.keys(givenInterestsGroupsData));
+            });
 
-        const receivedLabels = Object.keys(receivedRelationshipData);
-        const givenLabels = Object.keys(givenRelationshipData);
+        fetch(`/statistic/most_popular_interests_data/10`)
+            .then(response => response.json())
+            .then(data => {
+                const receivedMostPopularInterestsData = data.received_most_popular_interests_data;
+                const givenMostPopularInterestsData = data.given_most_popular_interests_data;
 
-        createPieChart("receivedInterestsChart", receivedValues, receivedLabels);
-        createPieChart("givenInterestsChart", givenValues, givenLabels);
+                createBarChart("receivedMostPopularInterestsChart",
+                    Object.values(receivedMostPopularInterestsData),
+                    Object.keys(receivedMostPopularInterestsData));
+                createBarChart("givenMostPopularInterestsChart",
+                    Object.values(givenMostPopularInterestsData),
+                    Object.keys(givenMostPopularInterestsData));
+            });
     {% endblock %}
 </script>

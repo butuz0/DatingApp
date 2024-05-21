@@ -137,7 +137,6 @@ def get_monthly_likes(user):
 
 
 def get_interest_groups_data(user):
-    get_most_popular_interests_data(user)
     received_likes, given_likes = get_likes(user)
     received_interest_groups = (Interest.objects
                                 .filter(userprofile__in=[like.user_from.user_info for like in received_likes])
@@ -151,3 +150,20 @@ def get_interest_groups_data(user):
     given_group_counts = Counter(given_interest_groups)
 
     return received_group_counts, given_group_counts
+
+
+def get_most_popular_interests_data(user, amount):
+    received_likes, given_likes = get_likes(user)
+    received_interests = (Interest.objects
+                          .filter(userprofile__in=[like.user_from.user_info for like in received_likes])
+                          .values_list('name', flat=True))
+
+    given_interests = (Interest.objects
+                       .filter(userprofile__in=[like.user_to.user_info for like in given_likes])
+                       .values_list('name', flat=True))
+
+    received_interests_counts = Counter(received_interests)
+    given_interests_counts = Counter(given_interests)
+
+    return (dict(received_interests_counts.most_common(amount)),
+            dict(given_interests_counts.most_common(amount)))

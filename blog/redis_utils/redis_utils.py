@@ -24,3 +24,23 @@ def get_comment_likes_count(comment_id):
 # checks if person has liked the comment
 def has_liked_comment(user_id, comment_id):
     return r.sismember(f'comment:{comment_id}:likes', user_id)
+
+
+# adds persons like to post
+def add_post_like(user_id, post_id):
+    r.sadd(f'post:{post_id}:likes', user_id)
+
+
+# removes persons like from post
+def remove_post_like(user_id, post_id):
+    r.srem(f'post:{post_id}:likes', user_id)
+
+
+# returns total post likes
+def get_post_likes_count(post_id):
+    return r.scard(f'post:{post_id}:likes')
+
+
+# checks if person has liked the post
+def has_liked_post(user_id, post_id):
+    return r.sismember(f'post:{post_id}:likes', user_id)

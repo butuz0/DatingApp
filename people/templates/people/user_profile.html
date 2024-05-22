@@ -103,7 +103,18 @@
                     <img class="post_image" src="{{ post.image.url }}" alt="">
                 {% endif %}
                 <p class="post_text">{{ post.text }}</p>
-                <p class="post_created">{{ post.created }}</p>
+                <div class="post_info">
+                    <p class="post_created">{{ post.created }}</p>
+                    <div class="post_like_button {% if post.has_liked %}liked{% endif %}">
+                        <a href="#"
+                           data-id="{{ post.id }}"
+                           data-action="post_{% if post.has_liked %}un{% endif %}like"
+                           class="post_like">
+                            <img src="{% static 'img/like_button.png' %}" alt="">
+                        </a>
+                    </div>
+                    <p class="post_likes_amount">Likes: {{ post.likes_amount }}</p>
+                </div>
 
                 <div class="comments_section">
                     {% if post.comments.exists %}
@@ -173,6 +184,44 @@
                         }
                     });
             });
+        }
+
+        const post_like_url = "{% url 'blog:like_post' %}";
+        if (document.querySelectorAll(".blog_post")) {
+            document.querySelectorAll(".blog_post").forEach((post) => {
+                console.log(post);
+                post.querySelector("a.post_like").addEventListener("click", function (e) {
+                    e.preventDefault();
+                    let likeButton = this;
+
+                    let formData = new FormData();
+                    formData.append("id", likeButton.dataset.id);
+                    formData.append("action", likeButton.dataset.action);
+                    options["body"] = formData;
+
+                    fetch(post_like_url, options)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data["status"] === "ok") {
+                                let previousAction = likeButton.dataset.action;
+                                likeButton.dataset.action = previousAction === "post_like" ? "post_unlike" : "post_like";
+                                likeButton.parentElement.classList.toggle("liked");
+
+                                let likesAmount = document.querySelector("p.post_likes_amount");
+                                let likes = parseInt(likesAmount.innerHTML.split(" ")[1]);
+                                console.log(likesAmount);
+
+                                if (previousAction === "post_like")
+                                    likesAmount.innerHTML = "Likes: " + (likes + 1);
+                                else
+                                    likesAmount.innerHTML = "Likes: " + (likes - 1);
+
+                            } else {
+                                alert("Error when processing your Like. Please refresh page and try again.");
+                            }
+                        });
+                });
+            })
         }
     {% endblock %}
 </script>

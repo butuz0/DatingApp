@@ -8,6 +8,7 @@ from django.db.models import Q
 from django.utils import timezone
 from account.models import UserProfile, Like
 from account.forms import ReportForm
+from blog.redis_utils import get_post_likes_count, has_liked_post
 from blog.forms import CreateCommentForm
 from statistic.redis_utils import add_profile_visits
 
@@ -44,6 +45,11 @@ def user_detail(request, username):
     add_profile_visits(user, request.user)
     posts = user.blog_posts.all()
     comment_form = CreateCommentForm()
+
+    for post in posts:
+        post.likes_amount = get_post_likes_count(post.id)
+        post.has_liked = has_liked_post(request.user.id, post.id)
+
     return render(request, 'people/user_profile.html', {'user': user,
                                                         'posts': posts,
                                                         'comment_form': comment_form})

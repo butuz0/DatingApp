@@ -14,7 +14,7 @@
 {% block content %}
     <div style="height: 99%">
         <div>
-            <a href="{% url 'people:user_detail' user.username %}">
+            <a style="text-decoration: none" href="{% url 'people:user_detail' user.username %}">
                 <h1 style="margin: 2%">{{ user.first_name }} {{ user.last_name }}</h1>
             </a>
         </div>
@@ -24,18 +24,19 @@
                     <img class="post_image" src="{{ post.image.url }}" alt="">
                 {% endif %}
                 <p class="post_text">{{ post.text }}</p>
-                <p class="post_created">{{ post.created }}</p>
-                <div class="post_like_button">
-                    <a href="#"
-                       data-id="{{ post.id }}"
-                       data-action="post_{% if post.has_liked %}un{% endif %}like"
-                       class="post_like">
-                        {#                        <div class="like_image">#}
-                        {#                            <img style="width: 4%" src="{% static 'img/like_button.png' %}" alt="">#}
-                        {#                        </div>#}
-                        {% if post.has_liked %}un{% endif %}like
-                    </a>
+                <div class="post_info">
+                    <p class="post_created">{{ post.created }}</p>
+                    <div class="post_like_button {% if post.has_liked %}liked{% endif %}">
+                        <a href="#"
+                           data-id="{{ post.id }}"
+                           data-action="post_{% if post.has_liked %}un{% endif %}like"
+                           class="post_like">
+                            <img src="{% static 'img/like_button.png' %}" alt="">
+                        </a>
+                    </div>
+                    <p class="post_likes_amount">Likes: {{ post.likes_amount }}</p>
                 </div>
+
             </div>
             <div class="comments_section">
                 {% for comment in comments %}
@@ -59,29 +60,27 @@
                                         </a>
                                         : {{ comment.text }}
                                     </p>
-                                    <p class="likes_amount">
-                                        Likes: {{ comment.likes_amount }}<br>
-                                    </p>
                                 </div>
                             </div>
-                            <p class="comment_time">{{ comment.created }}</p>
-                            <div class="comment_like_button">
-                                <a href="#"
-                                   data-id="{{ comment.id }}"
-                                   data-action="comment_{% if comment.has_liked %}un{% endif %}like"
-                                   class="comment_like">
-                                    <div class="like_image">
+                            <div class="comment_info">
+                                <p class="comment_time">{{ comment.created }}</p>
+                                <div class="comment_like_button  {% if comment.has_liked %}liked{% endif %}">
+                                    <a href="#"
+                                       data-id="{{ comment.id }}"
+                                       data-action="comment_{% if comment.has_liked %}un{% endif %}like"
+                                       class="comment_like">
                                         <img src="{% static 'img/like_button.png' %}" alt="">
-                                    </div>
-                                </a>
-                            </div>
-                            {% if author == request.user or post.author == request.user %}
-                                <div class="delete_button">
-                                    <a href="{% url 'blog:delete_comment' post.id comment.id %}">
-                                        <button>Delete comment</button>
                                     </a>
                                 </div>
-                            {% endif %}
+                                <p class="comment_likes_amount">Likes: {{ comment.likes_amount }}</p>
+                                {% if author == request.user or post.author == request.user %}
+                                    <div class="delete_button">
+                                        <a href="{% url 'blog:delete_comment' post.id comment.id %}">
+                                            <button>Delete</button>
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            </div>
                         </div>
                     {% endwith %}
                 {% empty %}
@@ -133,6 +132,16 @@
                                 let previousAction = likeButton.dataset.action;
                                 likeButton.dataset.action = previousAction === "comment_like" ? "comment_unlike" : "comment_like";
                                 likeButton.parentElement.classList.toggle("liked");
+
+                                let likesAmount = comment.querySelector("p.comment_likes_amount");
+                                let likes = parseInt(likesAmount.innerHTML.split(" ")[1]);
+                                console.log(likes);
+
+                                if (previousAction === "comment_like")
+                                    likesAmount.innerHTML = "Likes: " + (likes + 1);
+                                else
+                                    likesAmount.innerHTML = "Likes: " + (likes - 1);
+
                             } else {
                                 alert("Error when processing your Like. Please refresh page and try again.");
                             }
@@ -159,6 +168,16 @@
                             let previousAction = likeButton.dataset.action;
                             likeButton.dataset.action = previousAction === "post_like" ? "post_unlike" : "post_like";
                             likeButton.parentElement.classList.toggle("liked");
+
+                            let likesAmount = document.querySelector("p.post_likes_amount");
+                            let likes = parseInt(likesAmount.innerHTML.split(" ")[1]);
+                            console.log(likes);
+
+                            if (previousAction === "post_like")
+                                likesAmount.innerHTML = "Likes: " + (likes + 1);
+                            else
+                                likesAmount.innerHTML = "Likes: " + (likes - 1);
+
                         } else {
                             alert("Error when processing your Like. Please refresh page and try again.");
                         }
